@@ -15,6 +15,6 @@ export class KmApiService {
 
   // Méthode pour récupérer le message depuis la route /test
   getTestMessage(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/test`); // ✅ Correction de l'URL
+    return this.http.get<any>(`${this.apiUrl}/users/test`); // ✅ Correction de l'URL
   }
 }
