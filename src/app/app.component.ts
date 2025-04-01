@@ -1,10 +1,12 @@
 import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { KmApiService } from './services/km-api.service';
+import { HeaderComponent } from "./pages/partials/header/header.component";
+import { FooterComponent } from "./pages/partials/footer/footer.component";
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, HeaderComponent, FooterComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
