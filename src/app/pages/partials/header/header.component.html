@@ -1,20 +1,39 @@
-<header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
-    <div class="col-md-3 mb-2 mb-md-0">
-      <a href="/" class="d-inline-flex link-body-emphasis text-decoration-none">
-        <img src="https://getbootstrap.com/docs/5.0/assets/brand/bootstrap-logo.svg" alt="Bootstrap logo" width="40" height="32">
-      </a>
+<header>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom border-danger">
+  <div class="container-fluid">
+    <!-- Logo textuel -->
+    <a class="navbar-brand text-danger fw-bold" href="#">NipponStyle</a>
+
+    <!-- Bouton toggle pour mobile -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Liens centrés (Home et About) -->
+    <div class="position-absolute start-50 translate-middle-x">
+      <ul class="navbar-nav d-flex flex-row">
+        <li class="nav-item">
+          <a class="nav-link text-dark fw-bold" routerLink="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark fw-bold" href="#about">About</a>
+        </li>
+      </ul>
     </div>
 
-    <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-      <li><a href="#" class="nav-link px-2 link-secondary">Home</a></li>
-      <li><a href="#" class="nav-link px-2">Features</a></li>
-      <li><a href="#" class="nav-link px-2">Pricing</a></li>
-      <li><a href="#" class="nav-link px-2">FAQs</a></li>
-      <li><a href="#" class="nav-link px-2">About</a></li>
-    </ul>
-
-    <div class="col-md-3 text-end">
-      <button type="button" class="btn btn-outline-primary me-2">Login</button>
-      <button type="button" class="btn btn-primary">Sign-up</button>
+    <!-- Contenu du menu hamburger -->
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="btn btn-outline-danger me-2 fw-bold" routerLink="/login" routerLinkActive="active">Connexion</a>
+        </li>
+        <li class="nav-item">
+          <a class="btn btn-outline-danger fw-bold" routerLink="/register" routerLinkActive="active">Inscription</a>
+        </li>
+      </ul>
     </div>
-  </header>
+  </div>
+</nav>
+</header>

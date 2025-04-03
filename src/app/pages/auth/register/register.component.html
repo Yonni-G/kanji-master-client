@@ -1,0 +1,45 @@
+<main class="container my-5">
+    <!-- Section Hero -->
+    <section class="text-center">
+      <h1 class="fw-bold text-danger">Inscription</h1>
+      <p class="text-muted">Créez votre compte et rejoignez notre communauté passionnée par la culture japonaise.</p>
+    </section>
+  
+    <!-- Section Formulaire -->
+    <section class="row mt-5">
+      <div class="col-md-6 offset-md-3">
+        <form
+        (submit)="onSubmit()"
+        [formGroup]="loginForm">
+          <div class="mb-3">
+            <label for="username" class="form-label fw-bold text-danger">Choisissez un pseudo</label>
+            <input
+            formControlName="username"
+            type="text" id="username" name="username" class="form-control" placeholder="Choisissez un pseudo" required>
+          </div>
+          <div class="mb-3">
+            <label for="password" class="form-label fw-bold text-danger">Mot de passe</label>
+            <input
+            formControlName="username"
+            type="password" id="password" name="password" class="form-control" placeholder="Entrez votre mot de passe" required>
+          </div>
+          <div class="mb-3">
+            <label for="confirmPassword" class="form-label fw-bold text-danger">Confirmez le mot de passe</label>
+            <input
+            formControlName="confirmPassword"
+            type="password" id="confirmPassword" name="confirmPassword" class="form-control" placeholder="Confirmez votre mot de passe" required>
+          </div>
+          <div class="text-center mt-4">
+            <button type="submit" class="btn btn-danger text-white fw-bold">S'inscrire</button>
+          </div>
+        </form>
+      </div>
+    </section>
+  
+    <!-- Section Call-To-Action -->
+    <section class="text-center mt-5">
+      <p class="text-muted">Déjà inscrit ?</p>
+      <a href="#login" class="btn btn-outline-danger fw-bold">Se connecter</a>
+    </section>
+  </main>
+  
