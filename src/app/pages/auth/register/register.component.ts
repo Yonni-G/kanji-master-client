@@ -5,7 +5,6 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { User } from '../../../models/user';
 import { passwordMatchValidator } from '../../../validators/passwordMatchValidator';
 
 @Component({
@@ -15,21 +14,27 @@ import { passwordMatchValidator } from '../../../validators/passwordMatchValidat
   styleUrl: './register.component.css',
 })
 export class RegisterComponent {
-  loginForm = new FormGroup(
+  registrationForm = new FormGroup(
     {
       username: new FormControl(null, [
-        Validators.required,
-        Validators.minLength(5),
+        Validators.pattern('^[a-zA-Z0-9]{3,12}$') // 3 à 12 caractères alphanumériques
       ]),
-      password: new FormControl(null, [Validators.required]),
+      email: new FormControl(null, [Validators.required,
+        Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
+      ]),
+      password: new FormControl(null, [Validators.required,
+        // Au moins 8 caractères, au moins une lettre minuscule, une lettre majuscule, un chiffre et un caractère spécial
+        Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-=\\[\\]{};:\'",.<>?/~]).{8,}$')
+      
+      ]),
       confirmPassword: new FormControl(null, [Validators.required]),
     },
     { validators: passwordMatchValidator() }
   ); // Ajout du validateur de correspondance);
 
   onSubmit() {
-    if (this.loginForm.valid) {
-      console.log(this.loginForm.value);
+    if (this.registrationForm.valid) {
+      console.log(this.registrationForm.value);
     } else {
       console.log('Form is invalid');
     }

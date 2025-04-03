@@ -11,19 +11,19 @@ import { FooterComponent } from "./pages/partials/footer/footer.component";
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'client';
+  // title = 'client';
 
-  kmApiService: KmApiService = inject(KmApiService)
-  ngOnInit(): void {
-    this.kmApiService.getTestMessage().subscribe({
-      next: (response) => {
-        // Afficher l'alerte avec le message récupéré
-        alert(response.message); // Ici on suppose que la réponse a une clé 'message'
-      },
-      error: (err) => {
-        // Gérer les erreurs ici si la requête échoue
-        console.error('Erreur lors de la récupération du message:', err);
-      }
-    });
-  }
+  // kmApiService: KmApiService = inject(KmApiService)
+  // ngOnInit(): void {
+  //   this.kmApiService.getTestMessage().subscribe({
+  //     next: (response) => {
+  //       // Afficher l'alerte avec le message récupéré
+  //       alert(response.message); // Ici on suppose que la réponse a une clé 'message'
+  //     },
+  //     error: (err) => {
+  //       // Gérer les erreurs ici si la requête échoue
+  //       console.error('Erreur lors de la récupération du message:', err);
+  //     }
+  //   });
+  // }
 }
