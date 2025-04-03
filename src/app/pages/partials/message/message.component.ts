@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MessageService } from '../../../services/message.service';
+import { Message } from '../../../models/message';
 
 @Component({
   selector: 'app-message',
@@ -7,21 +8,23 @@ import { MessageService } from '../../../services/message.service';
   styleUrls: ['./message.component.css']
 })
 export class MessageComponent implements OnInit {
-  message: string | null = null;
+  message: Message | null = null;
+  private clearAfter: number = 3000; // Valeur par défaut
 
-  constructor(private messageService: MessageService) {}
+  constructor(private readonly messageService: MessageService) {}
 
-  ngOnInit() {
-    // Abonnez-vous au message observable
-    this.messageService.currentMessage.subscribe(message => {
-      this.message = message;
+ ngOnInit() {
+    // S'abonner aux messages et au délai 'clearAfter'
+    this.messageService.currentMessage.subscribe(({ message, clearAfter }) => {
+      this.message = message || null; // Récupérer le texte du message
+      this.clearAfter = clearAfter; // Récupérer le délai
 
-      // Si un message est reçu, commencez un délai pour le supprimer
+      // Si un message est défini, démarrer un délai pour le supprimer
       if (message) {
         setTimeout(() => {
           this.message = null;
-        }, 2000); // Disparaît après 5 secondes
+        }, this.clearAfter); // Utiliser le délai 'clearAfter' pour faire disparaître le message
       }
     });
-  }
+}
 }
