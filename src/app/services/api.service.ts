@@ -6,15 +6,12 @@ import { environment } from '../../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
-export class KmApiService {
-
-  // URL de l'API
-  private readonly apiUrl = environment.apiUrl;
+export class ApiService {
 
   constructor(private readonly http: HttpClient) { }
 
   // Méthode pour récupérer le message depuis la route /test
   getTestMessage(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/users/test`); // ✅ Correction de l'URL
+    return this.http.get<any>(`${environment.apiUrl}/users/test`); // ✅ Correction de l'URL
   }
 }

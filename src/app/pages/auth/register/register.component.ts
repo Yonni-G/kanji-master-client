@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -6,6 +6,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { passwordMatchValidator } from '../../../validators/passwordMatchValidator';
+import { MessageService } from '../../../services/message.service';
 
 @Component({
   selector: 'app-register',
@@ -14,6 +15,9 @@ import { passwordMatchValidator } from '../../../validators/passwordMatchValidat
   styleUrl: './register.component.css',
 })
 export class RegisterComponent {
+
+  private readonly messageService: MessageService = inject(MessageService);
+
   registrationForm = new FormGroup(
     {
       username: new FormControl(null, [
@@ -35,8 +39,10 @@ export class RegisterComponent {
   onSubmit() {
     if (this.registrationForm.valid) {
       console.log(this.registrationForm.value);
+      this.messageService.setMessage("Registration successful!");
     } else {
       console.log('Form is invalid');
+      this.messageService.setMessage("Registration unsuccessful!");
     }
   }
 }
