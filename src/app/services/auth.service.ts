@@ -19,8 +19,8 @@ export class AuthService {
   }
 
   private loadUserFromStorage(): void {
-    const storedToken = sessionStorage.getItem('accessToken');
-    const storedUsername = sessionStorage.getItem('username');
+    const storedToken = localStorage.getItem('accessToken');
+    const storedUsername = localStorage.getItem('username');
 
     if (storedToken && storedUsername) {
       this.accessToken$.next(storedToken);
@@ -29,11 +29,11 @@ export class AuthService {
   }
 
   private getStoredToken(): string | null {
-    return sessionStorage.getItem('accessToken');
+    return localStorage.getItem('accessToken');
   }
 
   private getStoredUsername(): string | null {
-    return sessionStorage.getItem('username');
+    return localStorage.getItem('username');
   }
 
   getAccessToken(): string | null {
@@ -58,8 +58,8 @@ export class AuthService {
         this.accessToken$.next(response.accessToken);
         this.username$.next(response.username);
 
-        sessionStorage.setItem('accessToken', response.accessToken); // Stocke dans sessionStorage
-        sessionStorage.setItem('username', response.username); // Stocke le nom d'utilisateur
+        localStorage.setItem('accessToken', response.accessToken); // Stocke dans localStorage
+        localStorage.setItem('username', response.username); // Stocke le nom d'utilisateur
       })
     );
   }
@@ -68,8 +68,8 @@ export class AuthService {
     this.apiService.logout().subscribe(() => {
       this.accessToken$.next(null);
       this.username$.next(null);
-      sessionStorage.removeItem('accessToken');
-      sessionStorage.removeItem('username');
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('username');
     });
   }
 
@@ -91,6 +91,6 @@ export class AuthService {
 
   setAccessToken(token: string | null) {
     this.accessToken$.next(token);
-    sessionStorage.setItem('accessToken', token || '');
+    localStorage.setItem('accessToken', token || '');
   }
 }

@@ -4,11 +4,10 @@ import {
   HttpRequest,
   HttpHandler,
   HttpEvent,
-  HttpErrorResponse,
 } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { AuthService } from '../services/auth.service';
-import { Observable, throwError } from 'rxjs';
-import { catchError, switchMap } from 'rxjs/operators';
+
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -18,37 +17,18 @@ export class AuthInterceptor implements HttpInterceptor {
     req: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    let accessToken = this.authService.getAccessToken();
+    const accessToken = this.authService.getAccessToken();
 
-    let authReq = req;
     if (accessToken) {
-      authReq = req.clone({
-        setHeaders: { Authorization: `Bearer ${accessToken}` },
+      // Clone la requête en ajoutant le token dans l'Authorization header
+      req = req.clone({
+        setHeaders: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        withCredentials: true,
       });
     }
 
-    return next.handle(authReq).pipe(
-      catchError((error: HttpErrorResponse) => {
-        if (error.status === 401) {
-          return this.authService.refreshAccessToken().pipe(
-            switchMap((res) => {
-              this.authService.setAccessToken(res.accessToken);
-              return next.handle(
-                req.clone({
-                  setHeaders: { Authorization: `Bearer ${res.accessToken}` },
-                })
-              );
-            }),
-            catchError(() => {
-              this.authService.logout();
-              return throwError(
-                () => new Error('Session expirée, veuillez vous reconnecter.')
-              );
-            })
-          );
-        }
-        return throwError(() => error);
-      })
-    );
+    return next.handle(req);
   }
 }
