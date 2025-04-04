@@ -22,7 +22,7 @@ export class RegisterComponent {
   private readonly authService: AuthService = inject(AuthService);
   private readonly router = inject(Router);
 
-  registrationForm = new FormGroup(
+  form = new FormGroup(
     {
       username: new FormControl(null, [
         Validators.pattern('^[a-zA-Z0-9]{3,12}$'), // 3 à 12 caractères alphanumériques
@@ -44,35 +44,37 @@ export class RegisterComponent {
   ); // Ajout du validateur de correspondance);
 
   onSubmit() {
-    if (this.registrationForm.valid) {
-      console.log(this.registrationForm.value);
+    if (this.form.valid) {
+      console.log(this.form.value);
 
       let user: User = {
-        username: this.registrationForm.value.username || '',
-        email: this.registrationForm.value.email || '',
-        password: this.registrationForm.value.password || '',
-        confirmPassword: this.registrationForm.value.confirmPassword || '',
+        username: this.form.value.username || '',
+        email: this.form.value.email || '',
+        password: this.form.value.password || '',
+        confirmPassword: this.form.value.confirmPassword || '',
       };
 
       // on va interroger notre api via le service authService
-      this.authService.register(user)
-        .subscribe({
-          next: (response) => {
-            console.log('Registration successful', response);
-            this.messageService.setMessage(
-              { text: 'Registration successful', type: 'success' },
-              5000
-            );
-            this.router.navigate(['/login']);
-          },
-          error: (error) => {
-            console.error('Registration failed', error);
-            this.messageService.setMessage(error.error.message);
-          },
-        });
+      this.authService.register(user).subscribe({
+        next: (response) => {
+          console.log('Registration successful', response);
+          this.messageService.setMessage(
+            { text: 'Registration successful', type: 'success' },
+            5000
+          );
+          this.router.navigate(['/login']);
+        },
+        error: (error) => {
+          console.error('Registration failed', error);
+          this.messageService.setMessage({ text: error.error.message, type: 'error' });
+        },
+      });
     } else {
       console.log('Form is invalid');
-      this.messageService.setMessage({ text: 'Form is invalid', type: 'error' });
+      this.messageService.setMessage({
+        text: 'Form is invalid',
+        type: 'error',
+      });
     }
   }
 }

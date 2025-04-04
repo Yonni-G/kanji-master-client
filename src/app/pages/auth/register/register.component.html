@@ -8,14 +8,14 @@
     <!-- Section Formulaire -->
     <section class="row mt-5">
         <div class="col-md-6 offset-md-3">
-            <form (submit)="onSubmit()" [formGroup]="registrationForm">
+            <form (submit)="onSubmit()" [formGroup]="form">
                 <div class="mb-3">
                     <label for="username" class="form-label fw-bold text-danger">Choisissez un pseudo</label>
                     <input formControlName="username" type="text" id="username" name="username" class="form-control"
                         placeholder="Choisissez un pseudo" required>
-                    @if(registrationForm.get("username")?.touched &&
-                    registrationForm.get("username")?.invalid) {
-                    @if(registrationForm.get('username')?.hasError('pattern')) {
+                    @if(form.get("username")?.touched &&
+                    form.get("username")?.invalid) {
+                    @if(form.get('username')?.hasError('pattern')) {
                     <small class="text-danger fst-italic">Votre pseudo doit contenir de 3 à 12 caractères alphanumériques</small>
                     } }
                 </div>
@@ -23,9 +23,9 @@
                     <label for="email" class="form-label fw-bold text-danger">Votre adresse email</label>
                     <input formControlName="email" type="text" id="email" name="email" class="form-control"
                         placeholder="Votre adresse email" required>
-                    @if(registrationForm.get("email")?.touched &&
-                    registrationForm.get("email")?.invalid) {
-                    @if(registrationForm.get('email')?.hasError('pattern')) {
+                    @if(form.get("email")?.touched &&
+                    form.get("email")?.invalid) {
+                    @if(form.get('email')?.hasError('pattern')) {
                     <small class="text-danger fst-italic">Saisissez une adresse email correcte</small>
                     } }
                 </div>
@@ -33,9 +33,9 @@
                     <label for="password" class="form-label fw-bold text-danger">Mot de passe</label>
                     <input formControlName="password" type="password" id="password" name="password" class="form-control"
                         placeholder="Entrez votre mot de passe" required>
-                        @if(registrationForm.get("password")?.touched &&
-                    registrationForm.get("password")?.invalid) {
-                    @if(registrationForm.get('password')?.hasError('pattern')) {
+                        @if(form.get("password")?.touched &&
+                    form.get("password")?.invalid) {
+                    @if(form.get('password')?.hasError('pattern')) {
                     <small class="text-danger fst-italic">Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.</small>
                     } }
                 </div>
@@ -44,19 +44,19 @@
                         passe</label>
                     <input formControlName="confirmPassword" type="password" id="confirmPassword" name="confirmPassword"
                         class="form-control" placeholder="Confirmez votre mot de passe" required>
-                        @if(registrationForm.get("password")?.touched &&
-                        registrationForm.get("confirmPassword")?.invalid) {
-                        @if(registrationForm.get('confirmPassword')?.hasError('confirmPassword')) {
+                        @if(form.get("confirmPassword")?.touched &&
+                        form.get("confirmPassword")?.invalid) {
+                        @if(form.get('confirmPassword')?.hasError('confirmPassword')) {
                         <small class="text-danger fst-italic">Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.</small>
                         } }
-                        @if (registrationForm.errors?.['passwordMismatch'] && registrationForm.get('confirmPassword')?.touched) {
+                        @if (form.errors?.['passwordMismatch'] && form.get('confirmPassword')?.touched) {
                             <small class="text-danger fst-italic">Les mots de passe ne correspondent pas.</small>
                           }
                     
                 </div>
                 <div class="text-center mt-4">
                     <button
-                    [disabled]="!registrationForm.valid"
+                    [disabled]="!form.valid"
                     type="submit" class="btn btn-danger text-white fw-bold">S'inscrire</button>
                 </div>
             </form>

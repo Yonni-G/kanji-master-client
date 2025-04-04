@@ -1,36 +1,31 @@
 import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MessageService } from '../../../services/message.service';
-import { AuthService } from '../../../services/auth.service';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { User } from '../../../models/user';
+import { MessageService } from '../../../services/message.service';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
-  selector: 'app-login',
+  selector: 'app-reset-password',
   imports: [ReactiveFormsModule, RouterLink, RouterLinkActive],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.css',
+  templateUrl: './reset-password.component.html',
+  styleUrl: './reset-password.component.css',
 })
-export class LoginComponent {
+export class ResetPasswordComponent {
   private readonly messageService: MessageService = inject(MessageService);
   private readonly authService: AuthService = inject(AuthService);
   private readonly router = inject(Router);
 
-  form = new FormGroup(
-    {
-      email: new FormControl(null, [
-        Validators.required,
-        Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$'),
-      ]),
-      password: new FormControl(null, [
-        Validators.required,
-        // Au moins 8 caractères, au moins une lettre minuscule, une lettre majuscule, un chiffre et un caractère spécial
-        Validators.pattern(
-          '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-=\\[\\]{};:\'",.<>?/~]).{8,}$'
-        ),
-      ])
-    }
-  ); 
+  form = new FormGroup({
+    password: new FormControl(null, [
+      Validators.required,
+      // Au moins 8 caractères, au moins une lettre minuscule, une lettre majuscule, un chiffre et un caractère spécial
+      Validators.pattern(
+        '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-=\\[\\]{};:\'",.<>?/~]).{8,}$'
+      ),      
+    ]),
+    confirmPassword: new FormControl(null, [Validators.required]),
+  });
 
   onSubmit() {
     if (this.form.valid) {
@@ -38,11 +33,13 @@ export class LoginComponent {
 
       let user: User = {
         username: '',
-        email: this.form.value.email || '',
+        email: '',
         password: this.form.value.password || '',
-        confirmPassword: '',
+        confirmPassword: this.form.value.confirmPassword || '',
       };
-
+    }
+  }
+/*
       // on va interroger notre api via le service authService
       this.authService.login(user).subscribe({
         next: (response) => {
@@ -55,7 +52,10 @@ export class LoginComponent {
         },
         error: (error) => {
           console.error('connexion failed', error);
-          this.messageService.setMessage({text: error.error.message, type: 'error'});
+          this.messageService.setMessage({
+            text: error.error.message,
+            type: 'error',
+          });
         },
       });
     } else {
@@ -66,4 +66,5 @@ export class LoginComponent {
       });
     }
   }
+    */
 }
