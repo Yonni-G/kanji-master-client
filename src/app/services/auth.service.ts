@@ -72,4 +72,25 @@ export class AuthService {
       sessionStorage.removeItem('username');
     });
   }
+
+  verifyResetToken(token: string): Observable<any> {
+    return this.apiService.verifyResetToken(token);
+  }
+
+  resetPassword(
+    token: string,
+    password: string,
+    confirmPassword: string
+  ): Observable<any> {
+    return this.apiService.resetPassword(token, password, confirmPassword);
+  }
+
+  refreshAccessToken(): Observable<{ accessToken: string }> {
+    return this.apiService.refreshAccessToken().pipe(tap((res) => this.setAccessToken(res.accessToken)));
+  }
+
+  setAccessToken(token: string | null) {
+    this.accessToken$.next(token);
+    sessionStorage.setItem('accessToken', token || '');
+  }
 }

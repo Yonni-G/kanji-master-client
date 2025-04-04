@@ -24,9 +24,13 @@ export class ApiService {
   }
 
   forgotPassword(user: User): Observable<any> {
-    return this.http.post<any>(`${environment.apiUrl}/users/forgot-password`, user, {
-      withCredentials: true,
-    });
+    return this.http.post<any>(
+      `${environment.apiUrl}/users/forgot-password`,
+      user,
+      {
+        withCredentials: true,
+      }
+    );
   }
 
   register(user: User): Observable<any> {
@@ -49,11 +53,31 @@ export class ApiService {
     );
   }
 
-  // api.service.ts
-  refreshToken(): Observable<{ accessToken: string }> {
+
+  refreshAccessToken(): Observable<{ accessToken: string }> {
     return this.http.post<{ accessToken: string }>(
       `${environment.apiUrl}/users/refresh-token`,
       {},
+      { withCredentials: true }
+    );
+  }
+
+  verifyResetToken(token: string): Observable<any> {
+    return this.http.post<any>(
+      `${environment.apiUrl}/users/verify-reset-token`,
+      { token },
+      { withCredentials: true }
+    );
+  }
+
+  resetPassword(
+    token: string,
+    password: string,
+    confirmPassword: string
+  ): Observable<any> {
+    return this.http.post<any>(
+      `${environment.apiUrl}/users/reset-password`,
+      { token, password, confirmPassword },
       { withCredentials: true }
     );
   }
