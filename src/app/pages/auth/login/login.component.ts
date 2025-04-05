@@ -22,11 +22,11 @@ export class LoginComponent {
   private readonly router = inject(Router);
 
   form = new FormGroup({
-    email: new FormControl(null, [
+    email: new FormControl("yonni4@gmail.com", [
       Validators.required,
       Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$'),
     ]),
-    password: new FormControl(null, [
+    password: new FormControl("Yonni45!!", [
       Validators.required,
       // Au moins 8 caractères, au moins une lettre minuscule, une lettre majuscule, un chiffre et un caractère spécial
       Validators.pattern(
@@ -37,7 +37,7 @@ export class LoginComponent {
 
   onSubmit() {
     if (this.form.valid) {
-      // on va créer un utilisateur avec les données du formulaire
+
       let user: User = {
         username: '',
         email: this.form.value.email || '',
@@ -47,9 +47,9 @@ export class LoginComponent {
 
       // on va interroger notre api via le service authService
       this.authService.login(user).subscribe({
-        next: (response) => {
+        next: (res) => {
           this.messageService.setMessage(
-            { text: 'Bienvenue sur votre compte :)', type: 'success' },
+            { text: res.message, type: 'success' },
             5000
           );
           this.router.navigate(['/']);

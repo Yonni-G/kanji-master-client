@@ -18,36 +18,32 @@
           <a class="nav-link text-dark fw-bold" routerLink="/">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-dark fw-bold" href="#about">About</a>
+          <a class="nav-link text-dark fw-bold" (click)="test1()">test1</a>
+          <a class="nav-link text-dark fw-bold" (click)="test2()">test2</a>
         </li>
-        @if(username) {
-        <li class="nav-item">
-          <a class="nav-link text-danger fw-bold" href="#about">Bienvenue, <strong>{{ username }}</strong></a>
-        </li>
-      }
       </ul>
     </div>
 
     <!-- Contenu du menu hamburger -->
     <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
       <ul class="navbar-nav">
+
         @if(!username) {
         <li class="nav-item">
-          <a class="btn btn-outline-danger me-2 fw-bold" routerLink="/login" routerLinkActive="active">Connexion</a>
+          <a class="btn btn-outline-danger me-2 fw-bold" routerLink="/register" routerLinkActive="active">Inscription</a>
         </li>
         <li class="nav-item">
-          <a class="btn btn-outline-danger fw-bold" routerLink="/register" routerLinkActive="active">Inscription</a>
+          <a class="btn btn-outline-danger fw-bold" routerLink="/login" routerLinkActive="active">Connexion</a>
         </li>
-        }
-        @if(username) {
+        } @else {
         <li class="nav-item">
-          <a class="btn btn-outline-danger me-2 fw-bold" (click)="protected()">Mon
-            Profil</a>
+          <a class="btn btn-outline-danger me-2 fw-bold" routerLink="/profile" routerLinkActive="active">Mon compte</a>
         </li>
         <li class="nav-item">
           <a class="btn btn-outline-danger fw-bold" (click)="logout()">Déconnexion</a>
         </li>
         }
+        
       </ul>
     </div>
   </div>

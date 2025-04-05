@@ -15,10 +15,8 @@ export class HeaderComponent {
   constructor(
     private readonly authService: AuthService,
     private readonly apiService: ApiService
-  ) {}
-
-  ngOnInit() {
-    this.authService.getUsername().subscribe((username) => {
+  ) {
+    this.authService.getUsername$().subscribe((username) => {
       this.username = username;
     });
   }
@@ -26,10 +24,32 @@ export class HeaderComponent {
   logout() {
     this.authService.logout();
   }
-
+  
   protected() {
     this.apiService.getTestProtected().subscribe((response) => {
       console.log('Réponse protégée:', response);
+    });
+  }
+
+  test1() {
+    this.authService.test().subscribe({
+      next: (res) => {
+        console.log(res);
+      },
+      error: (error) => {
+        console.error(error);
+      },
+    });
+  }
+
+  test2() {
+    this.authService.checkRefreshToken().subscribe({
+      next: (res) => {
+        console.log(res);
+      },
+      error: (error) => {
+        console.error(error);
+      },
     });
   }
 }
