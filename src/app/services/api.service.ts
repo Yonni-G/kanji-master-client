@@ -16,7 +16,6 @@ export class ApiService {
       .get<any>(`${environment.apiUrl}/users/check-refresh-token`, {
         withCredentials: true,
       })
-      .pipe(catchError(this.handleError));
   }
 
   // on interroge l'api pour savoir si le resetoken existe et est valide
@@ -24,8 +23,7 @@ export class ApiService {
     return this.http
       .post<any>(`${environment.apiUrl}/users/check-reset-token`, { resetToken },{
         withCredentials: true,
-      })
-      .pipe(catchError(this.handleError));
+      });
   }
 
   // Méthode pour récupérer le message depuis la route /test
@@ -34,7 +32,6 @@ export class ApiService {
       .get<any>(`${environment.apiUrl}/users/test`, {
         withCredentials: true,
       })
-      .pipe(catchError(this.handleError));
   }
 
   getTestProtected(): Observable<any> {
@@ -42,7 +39,6 @@ export class ApiService {
       .get<any>(`${environment.apiUrl}/users/protected`, {
         withCredentials: true,
       })
-      .pipe(catchError(this.handleError));
   }
 
   forgotPassword(user: User): Observable<any> {
@@ -50,7 +46,6 @@ export class ApiService {
       .post<any>(`${environment.apiUrl}/users/forgot-password`, user, {
         withCredentials: true,
       })
-      .pipe(catchError(this.handleError));
   }
 
   register(user: User): Observable<any> {
@@ -58,7 +53,6 @@ export class ApiService {
       .post<any>(`${environment.apiUrl}/users/register`, user, {
         withCredentials: true,
       })
-      .pipe(catchError(this.handleError));
   }
 
   login(user: User): Observable<any> {
@@ -66,7 +60,6 @@ export class ApiService {
       .post<any>(`${environment.apiUrl}/users/login`, user, {
         withCredentials: true,
       })
-      .pipe(catchError(this.handleError));
   }
 
   // Méthode pour se déconnecter
@@ -77,8 +70,7 @@ export class ApiService {
         {},
         { withCredentials: true }
       )
-      .pipe(catchError(this.handleError));
-  }
+    }
 
   resetPassword(
     token: string,
@@ -91,7 +83,6 @@ export class ApiService {
         { token, password, confirmPassword },
         { withCredentials: true }
       )
-      .pipe(catchError(this.handleError));
   }
 
   // Gérer les erreurs globales

@@ -66,7 +66,7 @@ export class ResetPasswordComponent {
         console.error('Erreur lors de la vérification du token', error);
         this.messageService.setMessage({
           text:
-            'Votre lien de réinitialisation a expiré ou est invalide. Veuillez demander un nouveau lien.',
+            error.error.message,
           type: 'error',
         });
       },
