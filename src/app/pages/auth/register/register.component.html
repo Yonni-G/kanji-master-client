@@ -55,9 +55,13 @@
                     
                 </div>
                 <div class="text-center mt-4">
-                    <button
-                    [disabled]="!form.valid"
-                    type="submit" class="btn btn-danger text-white fw-bold">S'inscrire</button>
+                    <button [disabled]="!form.valid || loading" class="btn btn-danger text-white fw-bold">
+                        @if (!loading) {
+                        Je m'inscris sur Kanji-Master
+                        } @else {
+                        <span class="spinner"></span> Chargement...
+                        }
+                    </button>
                 </div>
             </form>
         </div>
@@ -66,6 +70,6 @@
     <!-- Section Call-To-Action -->
     <section class="text-center mt-5">
         <p class="text-muted">Déjà inscrit ?</p>
-        <a href="#login" class="btn btn-outline-danger fw-bold">Se connecter</a>
+        <a routerLink="/login" routerLinkActive="active" class="btn btn-outline-danger fw-bold">Se connecter</a>
     </section>
 </main>

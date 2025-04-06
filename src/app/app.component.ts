@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './pages/partials/header/header.component';
 import { FooterComponent } from './pages/partials/footer/footer.component';
 import { MessageComponent } from './pages/partials/message/message.component';
@@ -14,10 +14,11 @@ import { AuthService } from './services/auth.service';
 export class AppComponent {
   // Injection du service AuthService
   private readonly authService: AuthService = inject(AuthService);
-
-  ngAfterViewInit(): void {
+  private readonly router = inject(Router);
+  
+  ngOnInit(): void {
     // Vérifie si le token est présent dans le sessionStorage
-    const token = sessionStorage.getItem('accessToken');
+    const token = this.authService.getAccessTokenFromStorage();
     if (token) {
       // TODO : vérifier la validité du token
       // Décode le token pour récupérer le nom d'utilisateur
@@ -39,7 +40,7 @@ export class AppComponent {
         next: (response) => {
           // Si le refreshToken est valide :
           // on stocke le token dans le sessionStorage
-          sessionStorage.setItem('accessToken', response.accessToken);
+          this.authService.setAccessTokenFromStorage(response.accessToken);
           const username =
             this.authService.getUsernameFromToken();
           // Met à jour le nom d'utilisateur
@@ -48,7 +49,7 @@ export class AppComponent {
           this.authService.setAccessToken$(response.token);
         },
         error: (error) => {
-          //console.error(error.message, error);
+          //this.router.navigate(['/login']);
         },
       });
     }

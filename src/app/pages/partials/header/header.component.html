@@ -1,51 +1,61 @@
 <header>
+  <nav class="navbar navbar-expand-lg bg-light border-bottom border-danger shadow-sm py-2">
+    <div class="container-fluid">
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom border-danger">
-  <div class="container-fluid">
-    <!-- Logo textuel -->
-    <a class="navbar-brand text-danger fw-bold" href="#">NipponStyle</a>
+      <!-- Logo + Titre intégré -->
+      <a class="navbar-brand d-flex align-items-center gap-2" href="#">
+        <img src="assets/images/logo-kanji-master.png" alt="Kanji Master" height="82" class="rounded shadow-sm">
+        <span class="text-danger fw-bold fs-5">Kanji-Master</span>
+      </a>
 
-    <!-- Bouton toggle pour mobile -->
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
-      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+      <!-- Bouton mobile -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+        aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
-    <!-- Liens centrés (Home et About) -->
-    <div class="position-absolute start-50 translate-middle-x">
-      <ul class="navbar-nav d-flex flex-row">
-        <li class="nav-item">
-          <a class="nav-link text-dark fw-bold" routerLink="/">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-dark fw-bold" (click)="test1()">test1</a>
-          <a class="nav-link text-dark fw-bold" (click)="test2()">test2</a>
-        </li>
-      </ul>
-    </div>
+      <!-- Contenu collapsible -->
+      <div class="collapse navbar-collapse justify-content-between align-items-center" id="navbarContent">
 
-    <!-- Contenu du menu hamburger -->
-    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-      <ul class="navbar-nav ms-auto text-end">
-
-        @if(!username) {
-        <li class="nav-item">
-          <a class="btn btn-outline-danger me-2 fw-bold" routerLink="/register" routerLinkActive="active">Inscription</a>
-        </li>
-        <li class="nav-item">
-          <a class="btn btn-outline-danger fw-bold" routerLink="/login" routerLinkActive="active">Connexion</a>
-        </li>
-        } @else {
-        <li class="nav-item">
-          <a class="btn btn-outline-danger me-2 fw-bold" routerLink="/profile" routerLinkActive="active">Mon compte</a>
-        </li>
-        <li class="nav-item">
-          <a class="btn btn-outline-danger fw-bold" (click)="logout()">Déconnexion</a>
-        </li>
+        <!-- Liens centraux -->
+        <ul class="navbar-nav mx-auto d-flex flex-row justify-content-center gap-3 w-100">
+          <li class="nav-item">
+            <a class="nav-link text-dark fw-semibold" [routerLink]="['/']">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-dark fw-semibold" (click)="test1()">Test1</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-dark fw-semibold" href="/protected" (click)="protected($event)">Protected</a>
+          </li>
+          @if(isAuthenticated) {
+          <li class="nav-item">
+            <a class="nav-link text-danger " routerLink="/dashboard/profile" routerLinkActive="active">Bienvenue [ <span class="fw-semibold">{{ username }}</span> ]</a>
+          </li>
         }
-        
-      </ul>
+        </ul>
+
+        <!-- Menu utilisateur à droite -->
+        <ul class="navbar-nav ms-auto d-flex align-items-center gap-2">
+          @if (!isAuthenticated) {
+          <li class="nav-item">
+            <a class="btn btn-outline-danger fw-bold" [routerLink]="['/register']" routerLinkActive="active">Inscription</a>
+          </li>
+          <li class="nav-item">
+            <a class="btn btn-outline-danger fw-bold" [routerLink]="['/login']" routerLinkActive="active">Connexion</a>
+          </li>
+          } @else {
+          <li class="nav-item">
+            <a class="btn btn-outline-danger fw-bold" [routerLink]="['/dashboard/profile']" routerLinkActive="active">Mon compte</a>
+          </li>
+          <li class="nav-item">
+            <a class="btn btn-outline-danger fw-bold" (click)="logout()">Déconnexion</a>
+          </li>
+          }
+        </ul>
+
+      </div>
+
     </div>
-  </div>
-</nav>
+  </nav>
 </header>

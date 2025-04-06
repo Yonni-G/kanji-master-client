@@ -4,6 +4,7 @@ import { AuthService } from '../../../services/auth.service';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { User } from '../../../models/user';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-forgot-password',
@@ -15,6 +16,8 @@ export class ForgotPasswordComponent {
   private readonly messageService: MessageService = inject(MessageService);
   private readonly authService: AuthService = inject(AuthService);
   private readonly router = inject(Router);
+
+  loading = false;
 
   form = new FormGroup({
     email: new FormControl(null, [
@@ -35,8 +38,14 @@ export class ForgotPasswordComponent {
         confirmPassword: '',
       };
 
+      this.loading = true;
       // on va interroger notre api via le service authService
-      this.authService.forgotPassword(user).subscribe({
+      this.authService.forgotPassword(user)
+             .pipe(
+               finalize(() => {
+                 this.loading = false; // ← toujours exécuté
+               })
+             ).subscribe({
         next: (response) => {
           this.form.reset();
           this.messageService.setMessage(

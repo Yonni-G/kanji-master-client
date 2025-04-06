@@ -1,16 +1,19 @@
 import { Component } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { ApiService } from '../../../services/api.service';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
   selector: 'app-header',
+  standalone: true,
   imports: [RouterLink, RouterLinkActive],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
 })
 export class HeaderComponent {
   username: string | null = null;
+  isAuthenticated: boolean = false;
+
 
   constructor(
     private readonly authService: AuthService,
@@ -18,14 +21,16 @@ export class HeaderComponent {
   ) {
     this.authService.getUsername$().subscribe((username) => {
       this.username = username;
+      this.isAuthenticated = this.authService.isAuthenticated();
     });
   }
 
   logout() {
     this.authService.logout();
   }
-  
-  protected() {
+
+  protected(event: Event) {
+    event.preventDefault(); // Empêche le comportement par défaut du lien
     this.apiService.getTestProtected().subscribe((response) => {
       console.log('Réponse protégée:', response);
     });

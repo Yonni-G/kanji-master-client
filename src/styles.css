@@ -1,0 +1,27 @@
+
+html, body { height: 100%; }
+body { margin: 0; font-family: "Sawarabi Mincho", sans-serif; }
+
+/*
+button {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    position: relative;
+}*/
+
+.spinner {
+    width: 1rem;
+    height: 1rem;
+    border: 2px solid #ccc;
+    border-top: 2px solid #333;
+    border-radius: 50%;
+    display: inline-block;
+    animation: spin 1s linear infinite;
+    margin-right: 0.5rem;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

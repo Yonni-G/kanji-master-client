@@ -1,0 +1,5 @@
+.logo-shadow {
+    box-shadow: 0 0 8px rgba(220, 53, 69, 0.5);
+    /* même rouge que btn-danger */
+    border-radius: 6px;
+}

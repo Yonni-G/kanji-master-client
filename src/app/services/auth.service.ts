@@ -18,6 +18,12 @@ export class AuthService {
   private readonly username$: BehaviorSubject<string | null> =
     new BehaviorSubject<string | null>(null);
 
+  ACCESS_TOKEN = 'accessToken';
+
+  isAuthenticated(): boolean {  
+    return !!this.getAccessTokenFromStorage();
+  }
+
   checkRefreshToken(): Observable<any> {
     return this.apiService.checkRefreshToken();
   }
@@ -30,9 +36,17 @@ export class AuthService {
     return this.apiService.getTestMessage();
   }
 
+  getAccessTokenFromStorage(): string | null {
+    return sessionStorage.getItem(this.ACCESS_TOKEN);
+  }
+
+  setAccessTokenFromStorage(val: string): void {
+    sessionStorage.setItem(this.ACCESS_TOKEN, val);
+  }
+
   getUsernameFromToken(): string | null {
     const decodedToken = this.jwtHelper.decodeToken(
-      sessionStorage.getItem('accessToken') || ''
+      this.getAccessTokenFromStorage() || ''
     );
     return decodedToken ? decodedToken.username : null;
   }
@@ -63,7 +77,7 @@ export class AuthService {
         // Met à jour l'accessToken
         this.accessToken$.next(response.accessToken);
         // Stocke le token dans le sessionStorage
-        sessionStorage.setItem('accessToken', response.accessToken);
+        this.setAccessTokenFromStorage(response.accessToken);
         this.username$.next(this.getUsernameFromToken());
       })
     );
@@ -73,7 +87,7 @@ export class AuthService {
     // on va supprimer le cookie http only refreshToken puis effacer le accessToken du sessionStorage, passer nos BehaviorSubject à null et rediriger vers la page de login
     this.apiService.logout().subscribe({
       next: () => {
-        sessionStorage.removeItem('accessToken');
+        sessionStorage.removeItem(this.ACCESS_TOKEN);
         this.accessToken$.next(null);
         this.username$.next(null);
         this.router.navigate(['/login']);

@@ -15,6 +15,7 @@ import { User } from '../../../models/user';
 import { MessageService } from '../../../services/message.service';
 import { AuthService } from '../../../services/auth.service';
 import { passwordMatchValidator } from '../../../validators/passwordMatchValidator';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-reset-password',
@@ -28,7 +29,8 @@ export class ResetPasswordComponent {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
 
-  resetToken: string | null = null;
+  resetToken: string = this.route.snapshot.params['resettoken'];
+  loading = false;
 
   // Formulaire de réinitialisation de mot de passe
   form = new FormGroup(
@@ -46,9 +48,6 @@ export class ResetPasswordComponent {
   );
 
   ngOnInit(): void {
-    // Récupération du token dans l'URL
-    this.resetToken = this.route.snapshot.params['resettoken'];
-    
     // Vérification de la présence du token
     if (!this.resetToken) {
       this.messageService.setMessage({
@@ -60,21 +59,19 @@ export class ResetPasswordComponent {
     }
     // Vérification de la validité du resetToken
     this.authService.checkResetToken(this.resetToken).subscribe({
-      next: () => {
-      },
+      next: () => {},
       error: (error) => {
         console.error('Erreur lors de la vérification du token', error);
         this.messageService.setMessage({
-          text:
-            error.error.message,
+          text: error.error.message,
           type: 'error',
         });
+        this.router.navigate(['/forgot-password']);
       },
     });
   }
 
   onSubmit() {
-    let resetToken = this.route.snapshot.params['resettoken'];
     if (this.form.valid) {
       let user: User = {
         username: '',
@@ -82,13 +79,19 @@ export class ResetPasswordComponent {
         password: this.form.value.password || '',
         confirmPassword: this.form.value.confirmPassword || '',
       };
+      this.loading = true;
       this.authService
-        .resetPassword(resetToken, user.password, user.confirmPassword)
+        .resetPassword(this.resetToken, user.password, user.confirmPassword)
+        .pipe(
+          finalize(() => {
+            this.loading = false; // ← toujours exécuté
+          })
+        )
         .subscribe({
           next: (response) => {
             this.messageService.setMessage(
               {
-                text: 'Réinitialisation réussie. Vous pouvez dès à présent vous connecter à nouveau.',
+                text: response.message,
                 type: 'success',
               },
               5000

@@ -9,6 +9,7 @@ import { MessageService } from '../../../services/message.service';
 import { AuthService } from '../../../services/auth.service';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { User } from '../../../models/user';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -21,12 +22,14 @@ export class LoginComponent {
   private readonly authService: AuthService = inject(AuthService);
   private readonly router = inject(Router);
 
+  loading = false;
+
   form = new FormGroup({
-    email: new FormControl("yonni4@gmail.com", [
+    email: new FormControl('yonni4@gmail.com', [
       Validators.required,
       Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$'),
     ]),
-    password: new FormControl("Yonni45!!", [
+    password: new FormControl('Yonni45!!', [
       Validators.required,
       // Au moins 8 caractères, au moins une lettre minuscule, une lettre majuscule, un chiffre et un caractère spécial
       Validators.pattern(
@@ -37,7 +40,6 @@ export class LoginComponent {
 
   onSubmit() {
     if (this.form.valid) {
-
       let user: User = {
         username: '',
         email: this.form.value.email || '',
@@ -46,22 +48,31 @@ export class LoginComponent {
       };
 
       // on va interroger notre api via le service authService
-      this.authService.login(user).subscribe({
-        next: (res) => {
-          this.messageService.setMessage(
-            { text: res.message, type: 'success' },
-            5000
-          );
-          this.router.navigate(['/']);
-        },
-        error: (error) => {
-          // connexion échouée
-          this.messageService.setMessage({
-            text: error.error.message,
-            type: 'error',
-          });
-        },
-      });
+     this.loading = true;
+
+     this.authService
+       .login(user)
+       .pipe(
+         finalize(() => {
+           this.loading = false; // ← toujours exécuté
+         })
+       )
+       .subscribe({
+         next: (res) => {
+           // Succès
+           this.router.navigate(['/']);
+         },
+         error: (err) => {
+           // Erreur
+           this.messageService.setMessage({
+             text: err.error.message,
+             type: 'error',
+           });
+         },
+       });
+
+
+
     } else {
       // form invalide
       this.messageService.setMessage({
@@ -69,5 +80,6 @@ export class LoginComponent {
         type: 'error',
       });
     }
+    
   }
 }

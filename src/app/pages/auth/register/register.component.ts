@@ -8,12 +8,13 @@ import {
 import { passwordMatchValidator } from '../../../validators/passwordMatchValidator';
 import { MessageService } from '../../../services/message.service';
 import { AuthService } from '../../../services/auth.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { User } from '../../../models/user';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-register',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, RouterLink, RouterLinkActive],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css',
 })
@@ -21,6 +22,8 @@ export class RegisterComponent {
   private readonly messageService: MessageService = inject(MessageService);
   private readonly authService: AuthService = inject(AuthService);
   private readonly router = inject(Router);
+
+  loading = false;
 
   form = new FormGroup(
     {
@@ -54,12 +57,17 @@ export class RegisterComponent {
         confirmPassword: this.form.value.confirmPassword || '',
       };
 
+      this.loading = true;
       // on va interroger notre api via le service authService
-      this.authService.register(user).subscribe({
+      this.authService.register(user)       .pipe(
+               finalize(() => {
+                 this.loading = false; // ← toujours exécuté
+               })
+             ).subscribe({
         next: (response) => {
           console.log('Registration successful', response);
           this.messageService.setMessage(
-            { text: 'Registration successful', type: 'success' },
+            { text: response.message, type: 'success' },
             5000
           );
           this.router.navigate(['/login']);

@@ -1,46 +1,76 @@
-import { Injectable } from '@angular/core';
 import {
-    HttpEvent,
-    HttpHandler,
-    HttpInterceptor,
-    HttpRequest,
-    HttpErrorResponse
+  HttpEvent,
+  HttpHandler,
+  HttpInterceptor,
+  HttpRequest,
+  HttpErrorResponse,
 } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { Injectable } from '@angular/core';
+import { Observable, catchError, switchMap, throwError } from 'rxjs';
+import { AuthService } from '../services/auth.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
+  private isRefreshing = false;
 
-    intercept(
-        req: HttpRequest<any>,
-        next: HttpHandler
-    ): Observable<HttpEvent<any>> {
+  constructor(private readonly authService: AuthService) {}
 
-        // Récupération du token depuis le sessionStorage
-        const token = sessionStorage.getItem('accessToken');
+  intercept(
+    req: HttpRequest<any>,
+    next: HttpHandler
+  ): Observable<HttpEvent<any>> {
 
-        // Optionnel : exclure certaines URL comme /login ou /register
-        if (req.url.includes('/login') || req.url.includes('/register')) {
-            return next.handle(req); // ne rien faire, passer la requête telle quelle
+     // ⛔️ Ignore l'appel à /api/refresh-token
+  if (
+    req.url.includes('/check-refresh-token') ||
+    req.url.includes('/check-reset-token') ||
+    req.url.includes('/login') ||
+    req.url.includes('/logout') ||
+    req.url.includes('/reset-password')
+  ) {
+    return next.handle(req);
+  }
+
+    const accessToken = this.authService.getAccessTokenFromStorage();
+
+    // Clone la requête et ajoute le header Authorization si le token existe
+    const authReq = accessToken
+      ? req.clone({
+          setHeaders: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        })
+      : req;
+
+    return next.handle(authReq).pipe(
+      catchError((error) => {
+        if (
+          error instanceof HttpErrorResponse &&
+          error.status === 401 &&
+          !this.isRefreshing
+        ) {
+          this.isRefreshing = true;
+          return this.authService.checkRefreshToken().pipe(
+            switchMap((response:    any) => {
+              this.authService.setAccessToken$(response.accessToken);
+              const newReq = req.clone({
+                setHeaders: {
+                  Authorization: `Bearer ${response.accessToken}`,
+                },
+              });
+              this.isRefreshing = false;
+              return next.handle(newReq);
+            }),
+            catchError((err) => {
+              this.isRefreshing = false;
+              this.authService.logout(); // supprime le token et redirige
+              return throwError(() => err);
+            })
+          );
         }
 
-        // S'il y a un token, on clone la requête en y ajoutant l'en-tête Authorization
-        const authReq = token
-            ? req.clone({
-                setHeaders: {
-                    Authorization: `Bearer ${token}`
-                }
-            })
-            : req;
-
-        return next.handle(authReq).pipe(
-            //catchError((error: HttpErrorResponse) => {
-                // Tu peux gérer ici les erreurs comme les 401, redirections, etc.
-                //console.error('Erreur HTTP interceptée:', error);
-                //alert('Erreur HTTP interceptée:');
-                //return throwError(() => error);
-            //})
-        );
-    }
+        return throwError(() => error);
+      })
+    );
+  }
 }
