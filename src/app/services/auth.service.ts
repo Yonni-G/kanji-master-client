@@ -20,8 +20,16 @@ export class AuthService {
 
   ACCESS_TOKEN = 'accessToken';
 
-  isAuthenticated(): boolean {  
-    return !!this.getAccessTokenFromStorage();
+  isAuthenticated(): boolean {
+    const token = this.getAccessTokenFromStorage();
+    if (!token) return false;
+
+    try {
+      return !this.jwtHelper.isTokenExpired(token);
+    } catch (e) {
+      console.warn('Token malformé ou invalide', e);
+      return false;
+    }
   }
 
   checkRefreshToken(): Observable<any> {

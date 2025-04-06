@@ -28,7 +28,7 @@
           <li class="nav-item">
             <a class="nav-link text-dark fw-semibold" href="/protected" (click)="protected($event)">Protected</a>
           </li>
-          @if(isAuthenticated) {
+          @if(username) {
           <li class="nav-item">
             <a class="nav-link text-danger " routerLink="/dashboard/profile" routerLinkActive="active">Bienvenue [ <span class="fw-semibold">{{ username }}</span> ]</a>
           </li>
@@ -37,7 +37,7 @@
 
         <!-- Menu utilisateur à droite -->
         <ul class="navbar-nav ms-auto d-flex align-items-center gap-2">
-          @if (!isAuthenticated) {
+          @if (!username) {
           <li class="nav-item">
             <a class="btn btn-outline-danger fw-bold" [routerLink]="['/register']" routerLinkActive="active">Inscription</a>
           </li>
