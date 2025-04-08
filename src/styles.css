@@ -2,13 +2,6 @@
 html, body { height: 100%; }
 body { margin: 0; font-family: "Sawarabi Mincho", sans-serif; }
 
-/*
-button {
-    padding: 0.5rem 1rem;
-    font-size: 1rem;
-    position: relative;
-}*/
-
 .spinner {
     width: 1rem;
     height: 1rem;
@@ -24,4 +17,9 @@ button {
     to {
         transform: rotate(360deg);
     }
+}
+
+.nav-link.active {
+    background-color: #f0f0f0;
+    border-radius: 5px;
 }

@@ -1,0 +1,49 @@
+<div class="container my-5">
+    <!-- Card -->
+    <div id="quiz-card" class="card mx-auto"
+        style="max-width: 28rem; width: 100%; border: 1px solid #ccc; border-radius: 10px;">
+        <!-- Header -->
+        <div class="card-header text-center p-2">
+            <!-- Counters -->
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <!-- Success Counter -->
+                <div class="d-flex justify-content-center align-items-center"
+                    style="width: 80px; height: 80px; border-radius: 50%; background-color: #28a745; color: white; font-size: 1.5rem; font-weight: bold;">
+                    3/10
+                </div>
+                <!-- Other Counters -->
+                <div class="d-flex flex-column text-end ms-auto">
+                    <span class="badge bg-info mb-1" style="font-size: 0.7rem;">Total : 5</span>
+                    <span class="badge bg-danger" style="font-size: 0.7rem;">Erreurs : 2</span>
+                </div>
+            </div>
+
+            <!-- Separator -->
+            <hr style="border-top: 1px solid #ccc; margin: 0.3rem 0;">
+
+            <!-- Chronometer -->
+            <div class="mt-2 mb-2">
+                <span class="fw-bold text-danger" style="font-size: 1.5rem;"><app-chronometer></app-chronometer></span>
+            </div>
+
+            <!-- Restart Button -->
+            <button type="button" class="btn btn-outline-danger fw-bold w-100">Recommencer</button>
+        </div>
+
+        <!-- Body -->
+        <div class="card-body text-center">
+            <!-- Kanji Display -->
+            <div style="font-size: 8rem; font-weight: bold; color: #333;">漢</div>
+        </div>
+
+        <!-- Footer -->
+        <div class="card-footer">
+            <!-- Choices -->
+            <div class="d-flex flex-column flex-md-row justify-content-between">
+                <button type="button" class="btn btn-outline-primary flex-fill my-1 mx-md-1">Sens 1</button>
+                <button type="button" class="btn btn-outline-primary flex-fill my-1 mx-md-1">Sens 2</button>
+                <button type="button" class="btn btn-outline-primary flex-fill my-1 mx-md-1">Sens 3</button>
+            </div>
+        </div>
+    </div>
+</div>

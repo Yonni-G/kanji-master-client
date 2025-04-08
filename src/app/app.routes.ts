@@ -6,6 +6,7 @@ import { ForgotPasswordComponent } from './pages/auth/forgot-password/forgot-pas
 import { ResetPasswordComponent } from './pages/auth/reset-password/reset-password.component';
 import { ProfileComponent } from './pages/auth/profile/profile.component';
 import { authGuard } from './guards/auth.guard';
+import { ClassicComponent } from './pages/games/classic/classic.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -13,5 +14,10 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'reset-password/:resettoken', component: ResetPasswordComponent },
-  { path: 'dashboard/profile', component: ProfileComponent, canActivate: [authGuard] }, // Add the authGuard here
+  {
+    path: 'dashboard/profile',
+    component: ProfileComponent,
+    canActivate: [authGuard],
+  }, // Add the authGuard here
+  { path: 'games/classic', component: ClassicComponent }, 
 ];
