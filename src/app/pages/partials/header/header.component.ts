@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { AuthService } from '../../../services/auth.service';
-import { ApiService } from '../../../services/api.service';
+import { ApiAuthService } from '../../../services/api.auth.service';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
@@ -17,7 +17,7 @@ export class HeaderComponent {
 
   constructor(
     private readonly authService: AuthService,
-    private readonly apiService: ApiService
+    private readonly apiService: ApiAuthService
   ) {
     this.authService.getUsername$().subscribe((username) => {
       this.username = username;

@@ -1,13 +1,13 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, map, Observable, throwError } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { User } from '../models/user';
 
 @Injectable({
   providedIn: 'root',
 })
-export class ApiService {
+export class ApiAuthService {
   constructor(private readonly http: HttpClient) {}
 
   // on interroge l'api pour savoir si le refreshToken existe et est valide

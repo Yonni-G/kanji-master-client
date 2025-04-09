@@ -1,3 +1,4 @@
+<!-- classic.component -->
 <div class="container my-5">
     <!-- Card -->
     <div id="quiz-card" class="card mx-auto"
@@ -9,12 +10,12 @@
                 <!-- Success Counter -->
                 <div class="d-flex justify-content-center align-items-center"
                     style="width: 80px; height: 80px; border-radius: 50%; background-color: #28a745; color: white; font-size: 1.5rem; font-weight: bold;">
-                    3/10
+                    {{ counters.success }}/{{ pointsForWinning }}
                 </div>
                 <!-- Other Counters -->
-                <div class="d-flex flex-column text-end ms-auto">
-                    <span class="badge bg-info mb-1" style="font-size: 0.7rem;">Total : 5</span>
-                    <span class="badge bg-danger" style="font-size: 0.7rem;">Erreurs : 2</span>
+                <div class="d-flex flex-column text-end ms-auto">                    
+                    <span class="badge bg-danger mb-1" style="font-size: 0.9rem;">Erreurs : {{ counters.errors }}</span>
+                    <span class="badge bg-info" style="font-size: 0.9rem;">Total : {{ counters.total }}</span>
                 </div>
             </div>
 
@@ -27,23 +28,38 @@
             </div>
 
             <!-- Restart Button -->
-            <button type="button" class="btn btn-outline-danger fw-bold w-100">Recommencer</button>
-        </div>
+            <button type="button" (click)="onStart()" 
+                class="btn btn-outline-danger fw-bold w-100">{{ card ? "Arrêter la partie !" : "Démarrer la partie !" }}</button>
 
+        </div>
         <!-- Body -->
         <div class="card-body text-center">
             <!-- Kanji Display -->
-            <div style="font-size: 8rem; font-weight: bold; color: #333;">漢</div>
+            <div style="font-size: 8rem; font-weight: bold; color: #333;">{{ card?.kanji || "遊" }}</div>
         </div>
-
+        
         <!-- Footer -->
         <div class="card-footer">
             <!-- Choices -->
-            <div class="d-flex flex-column flex-md-row justify-content-between">
-                <button type="button" class="btn btn-outline-primary flex-fill my-1 mx-md-1">Sens 1</button>
-                <button type="button" class="btn btn-outline-primary flex-fill my-1 mx-md-1">Sens 2</button>
-                <button type="button" class="btn btn-outline-primary flex-fill my-1 mx-md-1">Sens 3</button>
+            <div class="d-flex flex-column flex-md-row flex-wrap justify-content-between">
+
+                @if(card?.choices ) {
+                    @for(choice of card?.choices; track $index) {
+                    <button [ngClass]="getClasses()" (click)="onCheck(choice.correct)" type="button" class="btn btn-outline-primary flex-fill my-1 mx-md-1">{{ choice.meaning | uppercase
+                        }}</button>
+                    }
+                }@else {
+                    <button type="button" class="btn btn-outline-primary flex-fill my-1 mx-md-1">Choix 1</button>
+                    <button type="button" class="btn btn-outline-primary flex-fill my-1 mx-md-1">Choix 2</button>
+                    <button type="button" class="btn btn-outline-primary flex-fill my-1 mx-md-1">Choix 3</button>
+                }
+                
+                               
             </div>
         </div>
+
+
     </div>
 </div>
+
+        

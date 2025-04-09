@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
-import { ApiService } from './api.service';
+import { ApiAuthService } from './api.auth.service';
 import { User } from '../models/user';
-import { BehaviorSubject, catchError, Observable, of, tap } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Router } from '@angular/router';
 
@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 })
 export class AuthService {
   private readonly router = inject(Router);
-  private readonly apiService: ApiService = inject(ApiService);
+  private readonly apiService: ApiAuthService = inject(ApiAuthService);
   private readonly jwtHelper: JwtHelperService = inject(JwtHelperService);
 
   private readonly accessToken$: BehaviorSubject<string | null> =

@@ -1,0 +1,4 @@
+/* Animation pour les boutons de choix au clic */
+.button-clicked {
+    animation: button-click 0.5s ease-in-out;
+}
