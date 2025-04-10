@@ -7,6 +7,7 @@ import { ResetPasswordComponent } from './pages/auth/reset-password/reset-passwo
 import { ProfileComponent } from './pages/auth/profile/profile.component';
 import { authGuard } from './guards/auth.guard';
 import { ClassicComponent } from './pages/games/classic/classic.component';
+import { TemplateClassicComponent } from './pages/games/templates/template-classic/template-classic.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -19,5 +20,5 @@ export const routes: Routes = [
     component: ProfileComponent,
     canActivate: [authGuard],
   }, // Add the authGuard here
-  { path: 'games/classic', component: ClassicComponent }, 
+  { path: 'games/templatclassic', component: TemplateClassicComponent }, 
 ];

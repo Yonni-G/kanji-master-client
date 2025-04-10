@@ -1,10 +1,9 @@
 import { Component, ViewChild } from '@angular/core';
 import { ChronometerComponent } from "../../../components/games/chronometer/chronometer.component";
-import { ChronoFormatPipe } from '../../../pipes/chrono-format.pipe';
 
 @Component({
   selector: 'app-classic',
-  imports: [ChronometerComponent, ChronoFormatPipe],
+  imports: [ChronometerComponent],
   templateUrl: './classic.component.html',
   styleUrl: './classic.component.css',
 })
@@ -21,10 +20,6 @@ export class ClassicComponent {
 
   reset() {
     this.chrono.reset();
-  }
-
-  getChrono() {
-    return this.chrono.getChrono();
   }
 
 }
