@@ -20,7 +20,7 @@ export const routes: Routes = [
     path: 'dashboard/profile',
     component: ProfileComponent,
     canActivate: [authGuard],
-  }, // Add the authGuard here
+  },
   {
     path: 'games',
     component: GameLayoutComponent,
@@ -28,12 +28,22 @@ export const routes: Routes = [
       {
         path: 'classic',
         component: ClassicComponent,
-        data: { gameTitle: 'Mode Classique', gameGoal: 'Trouvez le sens de 10 Kanji le plus vite possible !' },
+        data: {
+          gameTitle: 'Mode Classique',
+          gameDescription:
+            'Trouvez le sens de 10 Kanji le plus vite possible !',
+          gameName: 'classic',
+        },
       },
       {
         path: 'reverse',
         component: ReverseComponent,
-        data: { gameTitle: 'Mode Reverse', gameGoal: 'Trouvez le Kanji correspondant au sens le plus vite possible !' },
+        data: {
+          gameTitle: 'Mode Reverse',
+          gameDescription:
+            'Trouvez le Kanji correspondant au sens le plus vite possible !',
+          gameName: 'reverse',
+        },
       },
       { path: '', redirectTo: 'classic', pathMatch: 'full' }, // fallback
     ],

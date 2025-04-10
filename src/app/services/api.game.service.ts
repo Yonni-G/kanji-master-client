@@ -12,4 +12,8 @@ export class ApiGameService {
   loadClassicCards(): Observable<any> {
     return this.http.get<any>(`${environment.apiUrl}/games/cards/classic`);
   }
+
+  loadReverseCards(): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/games/cards/reverse`);
+  }
 }

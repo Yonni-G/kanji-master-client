@@ -23,13 +23,14 @@
             <span class="nav-link text-dark fw-semibold">Jeux Kanji-Master :</span>
           </li>
           <li class="nav-item">
-            <a class="nav-link text-dark fw-semibold text-decoration-underline" routerLink="/games/classic" routerLinkActive="active">Classic</a>
+            <a class="nav-link text-dark fw-semibold text-decoration-underline" [routerLink]="['/games/classic']" routerLinkActive="active">Classic</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link text-dark fw-semibold" href="/games/reverse">Reverse (à venir)</a>
+            <a class="nav-link text-dark fw-semibold text-decoration-underline" [routerLink]="['/games/reverse']"
+              routerLinkActive="active">Reverse</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link text-dark fw-semibold" href="/games/mixed">Mixed (à venir)</a>
+            <a class="nav-link text-dark fw-semibold text-decoration-underline" href="#">Mix (à venir)</a>
           </li>
         </ul>
 

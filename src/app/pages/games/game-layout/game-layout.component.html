@@ -1,10 +1,48 @@
 <section class="text-center mt-5">
     <h1 class="fw-bold text-danger">{{ gameTitle }}</h1>
-    <p class="text-muted">{{ gameGoal }}</p>
+    <p class="text-muted">{{ gameDescription }}</p>
 </section>
 
+<!-- classic.component -->
+<div class="container my-5">
+    <!-- Card -->
+    <div id="quiz-card" class="card mx-auto"
+        style="max-width: 28rem; width: 100%; border: 1px solid #ccc; border-radius: 10px;">
+        <!-- Header -->
+        <div class="card-header text-center p-2">
+            <!-- Counters -->
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <!-- Success Counter -->
+                <div class="d-flex justify-content-center align-items-center"
+                    style="width: 80px; height: 80px; border-radius: 50%; background-color: #28a745; color: white; font-size: 1.5rem; font-weight: bold;">
+                    {{ counters.success }}/{{ pointsForWinning }}
+                </div>
+                <!-- Other Counters -->
+                <div class="d-flex flex-column text-end ms-auto">
+                    <span class="badge bg-danger mb-1" style="font-size: 0.9rem;">Erreurs : {{ counters.errors }}</span>
+                    <span class="badge bg-info" style="font-size: 0.9rem;">Total : {{ counters.total }}</span>
+                </div>
+            </div>
 
-        <router-outlet></router-outlet>
-<!-- ici on injecte classic ou reverse -->
+            <!-- Separator -->
+            <hr style="border-top: 1px solid #ccc; margin: 0.3rem 0;">
+
+            <!-- Chronometer -->
+            <div class="mt-2 mb-2">
+                <span class="fw-bold text-danger" style="font-size: 1.5rem;"><app-chronometer></app-chronometer></span>
+            </div>
+
+            <!-- Restart Button -->
+            <button type="button" (click)="onStart()" class="btn btn-outline-danger fw-bold w-100">{{ card ? "Arrêter la
+                partie !" : "Démarrer la partie !" }}</button>
+
+        </div>
+
+                <router-outlet></router-outlet>
+       
+
+
+    </div>
+</div>
  
 <p>game-layout works!</p>
