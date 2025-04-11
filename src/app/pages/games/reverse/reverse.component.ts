@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { GameService } from '../../../services/game.service';
 import { Card } from '../../../models/Card';
-import { UpperCasePipe } from '@angular/common';
+import { NgClass, UpperCasePipe } from '@angular/common';
 import { ChronometerComponent } from "../../../components/games/chronometer/chronometer.component";
 import { ChronoService } from '../../../services/chrono.service';
 import { ActivatedRoute } from '@angular/router';
@@ -9,7 +9,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-reverse',
-  imports: [UpperCasePipe, ChronometerComponent],
+  imports: [UpperCasePipe, ChronometerComponent, NgClass],
   templateUrl: './reverse.component.html',
   styleUrl: './reverse.component.css',
 })

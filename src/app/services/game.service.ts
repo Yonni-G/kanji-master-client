@@ -34,6 +34,7 @@ export class GameService {
     errors: 0,
     total: 0,
   };
+  _gameId = '';
 
   // PUBLIC
   // on expose nos observables.
@@ -43,37 +44,51 @@ export class GameService {
   // --
   isLoading: boolean = false;
   POINTS_FOR_WINNING = 5;
+  // Nombre de cartes minimum à partir duquel à va recharger des cartes
+  LOW_CARDS_FROM = 5;
 
   constructor(private readonly router: Router) {}
+
   startGame(gameId: string) {
+    this._gameId = gameId;
     // Si le jeu est déjà lancé => on reset
     if (this._cardIndex > -1) {
       this.resetGame();
       return;
     }
 
-    // Fonction générique pour démarrer le jeu
-    const loadCardsAndStartGame = (
-      loadCards: (callback: () => void) => void
-    ) => {
-      this.isLoading = true;
-      loadCards(() => {
-        this.isLoading = false;
-        this.startSubject.next(); // Démarrer le chrono
-        this._nextCard();
-      });
-    };
+    this.isLoading = true;
+    this.loadCards(gameId, () => {
+      this.isLoading = false;
+      this.startSubject.next(); // Démarrer le chrono
+      this._nextCard();
+    });
+  }
 
-    if (gameId === 'classic') {
-      loadCardsAndStartGame(this.loadClassicCards.bind(this)); // Bind pour le contexte
-    } else if (gameId === 'reverse') {
-      loadCardsAndStartGame(this.loadReverseCards.bind(this)); // Bind pour le contexte
+  onCheck(isCorrect: boolean) {
+    this._nextCard();
+    isCorrect ? this._counters.success++ : this._counters.errors++;
+    this._counters.total++;
+
+    // on verifie si la personne a gagné
+    if (this._counters.success === this.POINTS_FOR_WINNING) {
+      //alert(this.chronoService.chrono);
+      this.resetGame();
+      return;
+    }
+    // reste-t-il assez de cartes à deviner ?
+    console.log(
+      'index : ' + this._cardIndex + ', taille de cards : ' + this._cards.length
+    );
+    if (this._cardIndex + this.LOW_CARDS_FROM > this._cards.length) {
+      console.log('on recharge');
+      this.loadCards(this._gameId);
     }
   }
 
-  // TODO : refacto les 2 fonctions ci-dessous
-  loadClassicCards(onLoaded?: () => void) {
-    this.apiGameService.loadClassicCards().subscribe({
+  // chargement de cartes avec callback optionnel
+  loadCards(typeOfCard: string, onLoaded?: () => void) {
+    this.apiGameService.loadCards(typeOfCard).subscribe({
       next: (response: { cards: Card[] }) => {
         this._cards = this._cards.concat(response.cards);
         console.log(this._cards);
@@ -81,19 +96,6 @@ export class GameService {
       },
       error: (err) => {
         console.error('Erreur lors du chargement des cartes classiques:', err);
-      },
-    });
-  }
-
-  loadReverseCards(onLoaded?: () => void) {
-    this.apiGameService.loadReverseCards().subscribe({
-      next: (response: { cards: Card[] }) => {
-        this._cards = this._cards.concat(response.cards);
-        console.log(this._cards);
-        if (onLoaded) onLoaded();
-      },
-      error: (err) => {
-        console.error('Erreur lors du chargement des cartes inversées:', err);
       },
     });
   }
@@ -118,18 +120,6 @@ export class GameService {
 
   private _nextCard() {
     this._cardIndex++;
-  }
-
-  onCheck(isCorrect: boolean) {
-    this._nextCard();
-    isCorrect ? this._counters.success++ : this._counters.errors++;
-    this._counters.total++;
-
-    // on verifie si la personne a gagné
-    if (this._counters.success === this.POINTS_FOR_WINNING) {
-      alert(this.chronoService.chrono);
-      this.resetGame();
-    }
   }
 
   currentCard(): Card | null {

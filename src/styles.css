@@ -23,3 +23,23 @@ body { margin: 0; font-family: "Sawarabi Mincho", sans-serif; }
     background-color: #f0f0f0;
     border-radius: 5px;
 }
+
+/* Style général pour les cartes Kanji */
+.choice {
+    border: 1px solid #ccc;
+    /* Bordure par défaut */
+    border-radius: 10px;
+    /* Arrondi des coins */
+    background-color: #f8f9fa;
+    /* Fond gris clair */
+    transition: all 0.2s ease-in-out;
+    /* Animation fluide */
+}
+
+/* Effet de survol */
+.choice:hover {
+    background-color: #e9ecef;
+    /* Fond légèrement plus foncé au survol */
+    border-color: #3b3d41;
+    /* Bordure bleue au survol */
+}

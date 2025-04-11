@@ -42,7 +42,7 @@
         <!-- Body -->
         <div class="card-body text-center">
             <!-- Kanji Display -->
-            <div style="font-size: 8rem; font-weight: bold; color: #333;">{{ card?.proposal || "遊" }}</div>
+            <div style="font-size:8rem; font-weight: bold; color: #333;">{{ card?.proposal || "遊" }}</div>
         </div>
         
         <!-- Footer -->
@@ -53,7 +53,7 @@
                 @if(card?.choices ) {
                 @for(choice of card?.choices; track $index) {
                 <button (click)="onCheck(choice.correct)" type="button"
-                    [ngClass]="choice.correct ? 'text-success' : 'text-danger'" class="btn btn-outline-primary flex-fill my-1 mx-md-1">{{ choice.label | uppercase
+                    [ngClass]="choice.correct ? 'text-success' : 'text-danger'" class="btn choice flex-fill my-1 mx-md-1">{{ choice.label | uppercase
                     }}</button>
                 }
                 }
