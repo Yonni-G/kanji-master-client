@@ -33,8 +33,15 @@
             </div>
 
             <!-- Restart Button -->
-            <button type="button" (click)="onStart()" class="btn btn-outline-danger fw-bold w-100">{{ card ? "Arrêter la
-                partie !" : "Démarrer la partie !" }}</button>
+            <button type="button" (click)="onStart()" class="btn btn-outline-danger fw-bold w-100">
+                @if(isLoading) {
+                    <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+                    Chargement...
+                }
+                @if(!isLoading) {
+                    {{ card ? "Arrêter la partie !" : "Démarrer la partie !" }}
+                }
+            </button>
 
         </div>
 

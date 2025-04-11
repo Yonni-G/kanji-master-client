@@ -1,22 +1,24 @@
 <!-- Body -->
 <div class="card-body text-center">
     <!-- Kanji Display -->
-    <div style="font-size: 8rem; font-weight: bold; color: #333;">{{ card?.proposal || "Jouer" }}</div>
+    <div class="display-4 fw-bold text-dark">
+        {{ card?.proposal || "Jouer" }}
+    </div>
 </div>
 
 <!-- Footer -->
 <div class="card-footer">
     <!-- Choices -->
-    <div class="d-flex flex-column flex-md-row flex-wrap justify-content-between">
-
-        @if(card?.choices ) {
-            @for(choice of card?.choices; track $index) {
+    <div class="d-flex flex-column flex-md-row justify-content-center">
+        @if(card?.choices) {
+        @for(choice of card?.choices; track $index) {
+        <div class="card border-primary text-center mx-2" style="width: 150px;">
             <button (click)="onCheck(choice.correct)" type="button"
-                class="btn btn-outline-primary flex-fill my-1 mx-md-1">{{ choice.label | uppercase
-                }}</button>
-            }
+                class="btn btn-link text-decoration-none text-primary fw-bold" style="font-size: 3rem;">
+                {{ choice.label }}
+            </button>
+        </div>
         }
-
-
+        }
     </div>
 </div>

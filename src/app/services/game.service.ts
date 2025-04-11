@@ -1,5 +1,5 @@
 // game.service.ts
-import { inject, Injectable, Injector } from '@angular/core';
+import { ChangeDetectorRef, inject, Injectable, Injector } from '@angular/core';
 import { Subject } from 'rxjs';
 import { ApiGameService } from './api.game.service';
 import { Card } from '../models/Card';
@@ -9,6 +9,7 @@ import { ChronoService } from './chrono.service';
   providedIn: 'root',
 })
 export class GameService {
+
   private readonly apiGameService: ApiGameService = inject(ApiGameService);
 
   /* TODO : voir pour faire mieux pour gérer la dependance circulaire */
@@ -25,11 +26,6 @@ export class GameService {
   private readonly stopSubject = new Subject<void>();
   private readonly resetSubject = new Subject<void>();
 
-  // on expose nos observables.
-  start$ = this.startSubject.asObservable();
-  stop$ = this.stopSubject.asObservable();
-  reset$ = this.resetSubject.asObservable();
-
   private _cards: Card[] = [];
   private _cardIndex: number = -1;
 
@@ -39,7 +35,71 @@ export class GameService {
     total: 0,
   };
 
+  // PUBLIC
+  // on expose nos observables.
+  start$ = this.startSubject.asObservable();
+  stop$ = this.stopSubject.asObservable();
+  reset$ = this.resetSubject.asObservable();
+  // --
+  isLoading: boolean = false;
   POINTS_FOR_WINNING = 1;
+
+  startGame(loadCardsCallback: (onLoaded: () => void) => void) {
+    // si le jeu est deja lancé
+    if (this._cardIndex > -1) {
+      this.resetGame();
+      return;
+    }
+
+    this.isLoading = true;
+    // on attend que les cartes soient chargées
+    loadCardsCallback(() => {
+      this.isLoading = false;
+      this.startSubject.next(); // démarrer le chrono
+      this._cardIndex++;
+    });
+  }
+
+  // TODO : refacto les 2 fonctions ci-dessous
+  loadClassicCards(onLoaded?: () => void) {
+    this.apiGameService.loadClassicCards().subscribe({
+      next: (response: { cards: Card[] }) => {
+        this._cards = this._cards.concat(response.cards);
+        console.log(this._cards);
+        if (onLoaded) onLoaded();
+      },
+      error: (err) => {
+        console.error('Erreur lors du chargement des cartes classiques:', err);
+      },
+    });
+  }
+
+  loadReverseCards(onLoaded?: () => void) {
+    this.apiGameService.loadReverseCards().subscribe({
+      next: (response: { cards: Card[] }) => {
+        this._cards = this._cards.concat(response.cards);
+        console.log(this._cards);
+        if (onLoaded) onLoaded();
+      },
+      error: (err) => {
+        console.error('Erreur lors du chargement des cartes inversées:', err);
+      },
+    });
+  }
+
+  resetGame() {
+    // on arrete le chrono
+    this.resetSubject.next();
+
+    // on réinitialise les données du jeu
+    this._cards = [];
+    this._cardIndex = -1; // Réinitialiser l'index de la carte lors du chargement de nouvelles cartes
+    this._counters = {
+      success: 0,
+      errors: 0,
+      total: 0,
+    };
+  }
 
   stats() {
     return this._counters;
@@ -59,67 +119,5 @@ export class GameService {
 
   currentCard(): Card | null {
     return this._cards[this._cardIndex] || null;
-  }
-
-  startGame(loadCardsCallback: () => void) {
-    // si le jeu est deja lancé
-    if (this._cardIndex > -1) {
-      // on reset les données du game
-      this.resetGame();
-      // on recharge des cartes
-      loadCardsCallback();
-      return;
-    }
-
-    // on declenche le chronometre et on affiche la premiere carte
-    this.startSubject.next();
-    this._cardIndex++;
-  }
-
-  resetGame() {
-    //this.loadClassicCards();
-    // on arrete le chrono
-    this.resetSubject.next();
-  }
-
-  // TODO : refacto les 2 fonctions ci-dessous
-  loadClassicCards() {
-    this.apiGameService.loadClassicCards().subscribe({
-      next: (response: { cards: Card[] }) => {
-        this._cards = response.cards;
-        console.log(this._cards);
-
-        this._cardIndex = -1; // Réinitialiser l'index de la carte lors du chargement de nouvelles cartes
-        this._counters = {
-          success: 0,
-          errors: 0,
-          total: 0,
-        };
-      },
-      error: (err) => {
-        console.error('Erreur lors du chargement des cartes classiques:', err);
-        // Gérer l'erreur ici (affichage d'un message d'erreur ou autre)
-      },
-    });
-  }
-
-  loadReverseCards() {
-    this.apiGameService.loadReverseCards().subscribe({
-      next: (response: { cards: Card[] }) => {
-        this._cards = response.cards;
-        console.log(this._cards);
-
-        this._cardIndex = -1; // Réinitialiser l'index de la carte lors du chargement de nouvelles cartes
-        this._counters = {
-          success: 0,
-          errors: 0,
-          total: 0,
-        };
-      },
-      error: (err) => {
-        console.error('Erreur lors du chargement des cartes classiques:', err);
-        // Gérer l'erreur ici (affichage d'un message d'erreur ou autre)
-      },
-    });
   }
 }

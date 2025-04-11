@@ -24,6 +24,5 @@ export class ClassicComponent {
 
   ngOnInit() {
     this.gameService.resetGame();
-    this.gameService.loadClassicCards();
   }
 }

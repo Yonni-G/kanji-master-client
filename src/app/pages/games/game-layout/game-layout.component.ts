@@ -1,4 +1,4 @@
-import { Component, DestroyRef } from '@angular/core';
+import { AfterViewChecked, Component, DestroyRef } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { ChronometerComponent } from '../../../components/games/chronometer/chronometer.component';
 import { GameService } from '../../../services/game.service';
@@ -13,7 +13,7 @@ import { filter } from 'rxjs';
   templateUrl: './game-layout.component.html',
   styleUrl: './game-layout.component.css',
 })
-export class GameLayoutComponent {
+export class GameLayoutComponent  {
   gameTitle = '';
   gameDescription = '';
   private _gameName: 'classic' | 'reverse' = 'classic';
@@ -48,6 +48,10 @@ export class GameLayoutComponent {
       });
   }
 
+  get isLoading(): boolean {
+    return this.gameService.isLoading;
+  }
+
   get card(): Card | null {
     return this.gameService.currentCard();
   }
@@ -61,10 +65,12 @@ export class GameLayoutComponent {
   }
 
   onStart() {
-    this.gameService.startGame(() =>
-      this._gameName === 'classic'
-        ? this.gameService.loadClassicCards()
-        : this.gameService.loadReverseCards()
-    );
+    this.gameService.startGame((onLoaded) => {
+      if (this._gameName === 'classic') {
+        this.gameService.loadClassicCards(onLoaded);
+      } else {
+        this.gameService.loadReverseCards(onLoaded);
+      }
+    });
   }
 }

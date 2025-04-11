@@ -8,6 +8,7 @@ import { UpperCasePipe } from '@angular/common';
   imports: [UpperCasePipe],
   templateUrl: './reverse.component.html',
   styleUrl: './reverse.component.css',
+
 })
 export class ReverseComponent {
   constructor(private readonly gameService: GameService) {}
@@ -22,6 +23,5 @@ export class ReverseComponent {
 
   ngOnInit() {
     this.gameService.resetGame();
-    this.gameService.loadReverseCards();
   }
 }
