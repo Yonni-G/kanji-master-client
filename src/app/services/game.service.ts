@@ -4,12 +4,12 @@ import { Subject } from 'rxjs';
 import { ApiGameService } from './api.game.service';
 import { Card } from '../models/Card';
 import { ChronoService } from './chrono.service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GameService {
-
   private readonly apiGameService: ApiGameService = inject(ApiGameService);
 
   /* TODO : voir pour faire mieux pour gérer la dependance circulaire */
@@ -42,22 +42,33 @@ export class GameService {
   reset$ = this.resetSubject.asObservable();
   // --
   isLoading: boolean = false;
-  POINTS_FOR_WINNING = 1;
+  POINTS_FOR_WINNING = 5;
 
-  startGame(loadCardsCallback: (onLoaded: () => void) => void) {
-    // si le jeu est deja lancé
+  constructor(private readonly router: Router) {}
+  startGame(gameId: string) {
+    // Si le jeu est déjà lancé => on reset
     if (this._cardIndex > -1) {
       this.resetGame();
       return;
     }
 
-    this.isLoading = true;
-    // on attend que les cartes soient chargées
-    loadCardsCallback(() => {
-      this.isLoading = false;
-      this.startSubject.next(); // démarrer le chrono
-      this._cardIndex++;
-    });
+    // Fonction générique pour démarrer le jeu
+    const loadCardsAndStartGame = (
+      loadCards: (callback: () => void) => void
+    ) => {
+      this.isLoading = true;
+      loadCards(() => {
+        this.isLoading = false;
+        this.startSubject.next(); // Démarrer le chrono
+        this._nextCard();
+      });
+    };
+
+    if (gameId === 'classic') {
+      loadCardsAndStartGame(this.loadClassicCards.bind(this)); // Bind pour le contexte
+    } else if (gameId === 'reverse') {
+      loadCardsAndStartGame(this.loadReverseCards.bind(this)); // Bind pour le contexte
+    }
   }
 
   // TODO : refacto les 2 fonctions ci-dessous
@@ -105,8 +116,12 @@ export class GameService {
     return this._counters;
   }
 
-  checkAnswer(isCorrect: boolean) {
+  private _nextCard() {
     this._cardIndex++;
+  }
+
+  onCheck(isCorrect: boolean) {
+    this._nextCard();
     isCorrect ? this._counters.success++ : this._counters.errors++;
     this._counters.total++;
 

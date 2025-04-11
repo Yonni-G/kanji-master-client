@@ -28,22 +28,10 @@ export const routes: Routes = [
       {
         path: 'classic',
         component: ClassicComponent,
-        data: {
-          gameTitle: 'Mode Classique',
-          gameDescription:
-            'Trouvez le sens de 10 Kanji le plus vite possible !',
-          gameName: 'classic',
-        },
       },
       {
         path: 'reverse',
         component: ReverseComponent,
-        data: {
-          gameTitle: 'Mode Reverse',
-          gameDescription:
-            'Trouvez le Kanji correspondant au sens le plus vite possible !',
-          gameName: 'reverse',
-        },
       },
       { path: '', redirectTo: 'classic', pathMatch: 'full' }, // fallback
     ],
