@@ -1,5 +1,5 @@
 // classic.component.ts
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { GameService } from '../../../services/game.service';
 import { Card } from '../../../models/Card';
 import { ChronoService } from '../../../services/chrono.service';
@@ -7,6 +7,7 @@ import { ActivatedRoute } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ChronometerComponent } from "../../../components/games/chronometer/chronometer.component";
 import { NgClass, UpperCasePipe } from '@angular/common';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-classic',
@@ -16,6 +17,7 @@ import { NgClass, UpperCasePipe } from '@angular/common';
 })
 export class ClassicComponent {
   private _time: number | null = null;
+  authService = inject(AuthService);
 
   constructor(
     private readonly gameService: GameService,

@@ -5,12 +5,13 @@ import { ApiGameService } from './api.game.service';
 import { Card } from '../models/Card';
 import { ChronoService } from './chrono.service';
 import { Router } from '@angular/router';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GameService {
-  private readonly apiGameService: ApiGameService = inject(ApiGameService);
+  private readonly apiGameService: ApiGameService = inject(ApiGameService);  
 
   /* TODO : voir pour faire mieux pour gérer la dependance circulaire */
   private readonly injector = inject(Injector); // ✅ bonne syntaxe ici

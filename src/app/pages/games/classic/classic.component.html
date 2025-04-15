@@ -1,3 +1,11 @@
+<section class="text-center mt-5">
+    <h1 class="fw-bold text-danger">Classic 10</h1>
+    <p class="text-muted"><em>&gt; Devinez le sens de 10 Kanji le +vite possible ! &lt;</em></p>
+    @if(!authService.isAuthenticated()) {
+        <p class="text-danger bi bi-exclamation-triangle"> Vous n'êtes pas connecté.e, votre chrono <span class="bi bi-stopwatch"></span> ne sera pas enregistré !</p>
+    }
+
+</section>
 <!-- classic.component -->
 <div class="container my-5">
     <!-- Card -->
