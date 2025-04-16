@@ -1,30 +1,40 @@
 
+<section class="text-center mt-5">
+    <h1 class="fw-bold text-danger">Reverse 10</h1>
+    <p class="text-muted"><em>&gt; Devinez le Kanji de 10 sens le + vite possible ! &lt;</em></p>
+    @if(!authService.isAuthenticated()) {
+    <p class="text-danger bi bi-exclamation-triangle"> Vous n'êtes pas connecté.e, votre chrono <span
+            class="bi bi-stopwatch"></span> ne sera pas enregistré !</p>
+    }
 
+</section>
+<!-- classic.component -->
 <div class="container my-5">
     <!-- Card -->
-    <div id="quiz-card" class="card mx-auto" style="max-width: 28rem; border: 1px solid #ccc; border-radius: 10px;">
+    <div id="quiz-card" class="card mx-auto"
+        style="max-width: 28rem; width: 100%; border: 1px solid #ccc; border-radius: 10px;">
         <!-- Header -->
-        <div class="card-header text-center p-3">
+        <div class="card-header text-center p-2">
             <!-- Counters -->
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <!-- Success Counter -->
-                <div class="rounded-circle bg-success text-white d-flex justify-content-center align-items-center"
-                    style="width: 80px; height: 80px; font-size: 1.5rem; font-weight: bold;">
-                    {{ counters.success }}/{{ pointsForWinning }}
+                <div class="d-flex justify-content-center align-items-center"
+                    style="width: 80px; height: 80px; border-radius: 50%; background-color: #28a745; color: white; font-size: 1.5rem; font-weight: bold;">
+                    {{ counters.success }}/10
                 </div>
                 <!-- Other Counters -->
                 <div class="d-flex flex-column text-end ms-auto">
-                    <span class="badge bg-danger mb-1">Erreurs : {{ counters.errors }}</span>
-                    <span class="badge bg-info">Total : {{ counters.total }}</span>
+                    <span class="badge bg-danger mb-1" style="font-size: 0.9rem;">Erreurs : {{ counters.errors }}</span>
+                    <span class="badge bg-info" style="font-size: 0.9rem;">Total : {{ counters.total }}</span>
                 </div>
             </div>
 
             <!-- Separator -->
-            <hr>
+            <hr style="border-top: 1px solid #ccc; margin: 0.3rem 0;">
 
             <!-- Chronometer -->
             <div class="mt-2 mb-2">
-                <span class="fw-bold text-danger fs-4"><app-chronometer></app-chronometer></span>
+                <span class="fw-bold text-danger" style="font-size: 1.5rem;"><app-chronometer></app-chronometer></span>
             </div>
 
             <!-- Restart Button -->
@@ -37,6 +47,7 @@
                 {{ card ? "Arrêter la partie !" : "Démarrer la partie !" }}
                 }
             </button>
+
         </div>
 
         <!-- Body -->
@@ -46,7 +57,7 @@
                 {{ card?.proposal || "Jouer" }}
             </div>
         </div>
-
+        
         <!-- Footer -->
         <div class="card-footer">
             <!-- Choices -->
@@ -54,12 +65,13 @@
         
                 @if(card?.choices ) {
                 @for(choice of card?.choices; track $index) {
-                <button (click)="onCheck($index)" type="button"
-                    [ngClass]="choice.correct ? 'text-success' : 'text-danger'"
-                    class="btn choice flex-fill my-1 mx-md-1">{{ choice.label | uppercase
+                <button (click)="onCheck($index)" type="button" class="btn choice flex-fill my-1 mx-md-1">{{ choice.label | uppercase
                     }}</button>
                 }
                 }
         
             </div>
         </div>
+
+    </div>
+</div>

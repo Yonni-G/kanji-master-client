@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { GameService } from '../../../services/game.service';
 import { Card } from '../../../models/Card';
 import { NgClass, UpperCasePipe } from '@angular/common';
@@ -7,6 +7,7 @@ import { ChronoService } from '../../../services/chrono.service';
 import { ActivatedRoute } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { GameMode } from '../../../models/GameMode';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-reverse',
@@ -16,6 +17,7 @@ import { GameMode } from '../../../models/GameMode';
 })
 export class ReverseComponent {
   private _time: number | null = null;
+  authService = inject(AuthService);
 
   constructor(
     private readonly gameService: GameService,
@@ -32,15 +34,11 @@ export class ReverseComponent {
   }
 
   get card(): Card | null {
-    return this.gameService.currentCard();
-  }
-
-  get pointsForWinning(): number | null {
-    return this.gameService.POINTS_FOR_WINNING;
+    return this.gameService.card();
   }
 
   get counters() {
-    return this.gameService.stats();
+    return this.gameService.counters();
   }
 
   onStart() {

@@ -14,4 +14,7 @@ export class ApiGameService {
     return this.http.get<any>(`${environment.apiUrl}/games/${gameMode}/start`);
   }
 
+  checkAnswer(gameMode: GameMode, gameToken: string, choiceIndex: number): Observable<any> {
+    return this.http.post<any>(`${environment.apiUrl}/games/${gameMode}/checkAnswer`, { gameToken, choiceIndex });
+  }
 }

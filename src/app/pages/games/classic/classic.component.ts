@@ -35,15 +35,11 @@ export class ClassicComponent {
   }
 
   get card(): Card | null {
-    return this.gameService.currentCard();
-  }
-
-  get pointsForWinning(): number | null {
-    return this.gameService.POINTS_FOR_WINNING;
+    return this.gameService.card();
   }
 
   get counters() {
-    return this.gameService.stats();
+    return this.gameService.counters();
   }
 
   onStart() {

@@ -32,9 +32,9 @@ export class GameService {
     errors: 0,
     total: 0,
   };
-  _gameMode: GameMode = GameMode.CLASSIC
-  _gameToken: string | null = null;
-  _card: Card | null = null;
+  private _gameMode: GameMode = GameMode.CLASSIC;
+  private _gameToken: string | null = null;
+  private _card: Card | null = null;
 
   // PUBLIC
   // on expose nos observables.
@@ -43,14 +43,40 @@ export class GameService {
   reset$ = this.resetSubject.asObservable();
   // --
   isLoading: boolean = false;
-  POINTS_FOR_WINNING = 5;
-  // Nombre de cartes minimum à partir duquel à va recharger des cartes
-  LOW_CARDS_FROM = 5;
 
   constructor(private readonly router: Router) {}
 
   initGame(gameMode: GameMode) {
     this._gameMode = gameMode;
+  }
+
+  onCheck(choiceIndex: number) {
+    // on va interroger notre api en lui passant :
+    // - le choix du joueur (choiceIndex)
+    // - le gameToken
+    // ce dernier nous dira si oui ou non la reponse est bonne et il nous renverra une nouvelle response (token + card)
+    this.apiGameService
+      .checkAnswer(this._gameMode, this._gameToken!, choiceIndex)
+      .subscribe({
+        next: (response) => {
+          
+          // on checke une eventuelle victoire
+          if(response.chrono) {
+            alert('you win ' + response.chrono);
+            this.resetGame();
+            return;
+          }
+          
+          this._card = response.card;
+          this._gameToken = response.gameToken;
+          if (response.correct) this._counters.success++;
+          else this._counters.errors++;
+        },
+        error: (err) => {
+          console.error('Erreur lors du contrôle de la réponse', err);
+        },
+      });
+    this._counters.total++;
   }
 
   StopAndStartGame() {
@@ -61,22 +87,13 @@ export class GameService {
     }
 
     // on démarre le jeu et en retour on obtient une carte
-    
+
     this.isLoading = true;
     this.startGame(this._gameMode, () => {
       this.isLoading = false;
       this.startSubject.next(); // Démarrer le chrono
       //this._nextCard();
     });
-    
-  }
-
-  onCheck(choiceIndex: number) {
-    // on va interroger notre api en lui passant :
-    // - le choix du joueur (choiceIndex)
-    // - le gameToken
-    // ce dernier nous dira si oui ou non la reponse est bonne et il nous renverra une card
-    
   }
 
   // chargement de cartes avec callback optionnel
@@ -100,7 +117,6 @@ export class GameService {
 
     // on réinitialise les données du jeu
     this._card = null;
-    //this._cardIndex = -1; // Réinitialiser l'index de la carte lors du chargement de nouvelles cartes
     this._counters = {
       success: 0,
       errors: 0,
@@ -108,11 +124,12 @@ export class GameService {
     };
   }
 
-  stats() {
+  // accesseurs
+  counters() {
     return this._counters;
   }
 
-  currentCard(): Card | null {
+  card(): Card | null {
     return this._card || null;
   }
 }
