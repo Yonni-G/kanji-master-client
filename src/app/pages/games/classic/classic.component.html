@@ -60,8 +60,8 @@
         
                 @if(card?.choices ) {
                 @for(choice of card?.choices; track $index) {
-                <button (click)="onCheck(choice.correct)" type="button"
-                    [ngClass]="choice.correct ? 'text-success' : 'text-danger'" class="btn choice flex-fill my-1 mx-md-1">{{ choice.label | uppercase
+                <button (click)="onCheck($index)" type="button"
+                    class="btn choice flex-fill my-1 mx-md-1">{{ choice.label | uppercase
                     }}</button>
                 }
                 }

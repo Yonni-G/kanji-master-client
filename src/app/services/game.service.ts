@@ -1,17 +1,17 @@
 // game.service.ts
-import { ChangeDetectorRef, inject, Injectable, Injector } from '@angular/core';
+import { inject, Injectable, Injector } from '@angular/core';
 import { Subject } from 'rxjs';
 import { ApiGameService } from './api.game.service';
 import { Card } from '../models/Card';
 import { ChronoService } from './chrono.service';
 import { Router } from '@angular/router';
-import { AuthService } from './auth.service';
+import { GameMode } from '../models/GameMode';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GameService {
-  private readonly apiGameService: ApiGameService = inject(ApiGameService);  
+  private readonly apiGameService: ApiGameService = inject(ApiGameService);
 
   /* TODO : voir pour faire mieux pour gérer la dependance circulaire */
   private readonly injector = inject(Injector); // ✅ bonne syntaxe ici
@@ -27,15 +27,14 @@ export class GameService {
   private readonly stopSubject = new Subject<void>();
   private readonly resetSubject = new Subject<void>();
 
-  private _cards: Card[] = [];
-  private _cardIndex: number = -1;
-
   private _counters = {
     success: 0,
     errors: 0,
     total: 0,
   };
-  _gameId = '';
+  _gameMode: GameMode = GameMode.CLASSIC
+  _gameToken: string | null = null;
+  _card: Card | null = null;
 
   // PUBLIC
   // on expose nos observables.
@@ -50,49 +49,43 @@ export class GameService {
 
   constructor(private readonly router: Router) {}
 
-  startGame(gameId: string) {
-    this._gameId = gameId;
-    // Si le jeu est déjà lancé => on reset
-    if (this._cardIndex > -1) {
-      this.resetGame();
-      return;
-    }
-
-    this.isLoading = true;
-    this.loadCards(gameId, () => {
-      this.isLoading = false;
-      this.startSubject.next(); // Démarrer le chrono
-      this._nextCard();
-    });
+  initGame(gameMode: GameMode) {
+    this._gameMode = gameMode;
   }
 
-  onCheck(isCorrect: boolean) {
-    this._nextCard();
-    isCorrect ? this._counters.success++ : this._counters.errors++;
-    this._counters.total++;
-
-    // on verifie si la personne a gagné
-    if (this._counters.success === this.POINTS_FOR_WINNING) {
-      //alert(this.chronoService.chrono);
+  StopAndStartGame() {
+    // Si le jeu est déjà lancé => on reset
+    if (this._card) {
       this.resetGame();
       return;
     }
-    // reste-t-il assez de cartes à deviner ?
-    console.log(
-      'index : ' + this._cardIndex + ', taille de cards : ' + this._cards.length
-    );
-    if (this._cardIndex + this.LOW_CARDS_FROM > this._cards.length) {
-      console.log('on recharge');
-      this.loadCards(this._gameId);
-    }
+
+    // on démarre le jeu et en retour on obtient une carte
+    
+    this.isLoading = true;
+    this.startGame(this._gameMode, () => {
+      this.isLoading = false;
+      this.startSubject.next(); // Démarrer le chrono
+      //this._nextCard();
+    });
+    
+  }
+
+  onCheck(choiceIndex: number) {
+    // on va interroger notre api en lui passant :
+    // - le choix du joueur (choiceIndex)
+    // - le gameToken
+    // ce dernier nous dira si oui ou non la reponse est bonne et il nous renverra une card
+    
   }
 
   // chargement de cartes avec callback optionnel
-  loadCards(typeOfCard: string, onLoaded?: () => void) {
-    this.apiGameService.loadCards(typeOfCard).subscribe({
-      next: (response: { cards: Card[] }) => {
-        this._cards = this._cards.concat(response.cards);
-        console.log(this._cards);
+  startGame(gameMode: GameMode, onLoaded?: () => void) {
+    this.apiGameService.startGame(gameMode).subscribe({
+      next: (response) => {
+        this._card = response.card;
+        this._gameToken = response.gameToken;
+        console.log(this._gameToken);
         if (onLoaded) onLoaded();
       },
       error: (err) => {
@@ -106,8 +99,8 @@ export class GameService {
     this.resetSubject.next();
 
     // on réinitialise les données du jeu
-    this._cards = [];
-    this._cardIndex = -1; // Réinitialiser l'index de la carte lors du chargement de nouvelles cartes
+    this._card = null;
+    //this._cardIndex = -1; // Réinitialiser l'index de la carte lors du chargement de nouvelles cartes
     this._counters = {
       success: 0,
       errors: 0,
@@ -119,11 +112,7 @@ export class GameService {
     return this._counters;
   }
 
-  private _nextCard() {
-    this._cardIndex++;
-  }
-
   currentCard(): Card | null {
-    return this._cards[this._cardIndex] || null;
+    return this._card || null;
   }
 }

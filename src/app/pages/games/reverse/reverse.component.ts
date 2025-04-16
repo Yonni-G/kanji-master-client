@@ -6,6 +6,7 @@ import { ChronometerComponent } from "../../../components/games/chronometer/chro
 import { ChronoService } from '../../../services/chrono.service';
 import { ActivatedRoute } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { GameMode } from '../../../models/GameMode';
 
 @Component({
   selector: 'app-reverse',
@@ -43,11 +44,12 @@ export class ReverseComponent {
   }
 
   onStart() {
-    this.gameService.startGame('reverse');
+    this.gameService.initGame(GameMode.REVERSE);
+    this.gameService.StopAndStartGame();
   }
 
-  onCheck(isCorrect: boolean) {
-    this.gameService.onCheck(isCorrect);
+  onCheck(choiceIndex: number) {
+    this.gameService.onCheck(choiceIndex);
   }
 
   ngOnInit() {

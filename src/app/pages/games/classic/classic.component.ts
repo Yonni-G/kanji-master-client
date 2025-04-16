@@ -8,6 +8,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ChronometerComponent } from "../../../components/games/chronometer/chronometer.component";
 import { NgClass, UpperCasePipe } from '@angular/common';
 import { AuthService } from '../../../services/auth.service';
+import { GameMode } from '../../../models/GameMode';
 
 @Component({
   selector: 'app-classic',
@@ -46,11 +47,12 @@ export class ClassicComponent {
   }
 
   onStart() {
-    this.gameService.startGame('classic');
+    this.gameService.initGame(GameMode.CLASSIC);
+    this.gameService.StopAndStartGame();
   }
 
-  onCheck(isCorrect: boolean) {
-    this.gameService.onCheck(isCorrect);
+  onCheck(choiceIndex: number) {
+    this.gameService.onCheck(choiceIndex);
   }
 
   ngOnInit() {
