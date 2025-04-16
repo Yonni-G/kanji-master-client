@@ -9,10 +9,11 @@ import { ChronometerComponent } from "../../../components/games/chronometer/chro
 import { NgClass, UpperCasePipe } from '@angular/common';
 import { AuthService } from '../../../services/auth.service';
 import { GameMode } from '../../../models/GameMode';
+import { ChronoFormatPipe } from '../../../pipes/chrono-format.pipe';
 
 @Component({
   selector: 'app-classic',
-  imports: [UpperCasePipe, ChronometerComponent, NgClass],
+  imports: [UpperCasePipe, ChronometerComponent, ChronoFormatPipe],
   templateUrl: './classic.component.html',
   styleUrl: './classic.component.css',
 })
@@ -40,6 +41,10 @@ export class ClassicComponent {
 
   get counters() {
     return this.gameService.counters();
+  }
+
+  get userLiveChrono() {
+    return this.gameService.userLiveChrono();
   }
 
   onStart() {

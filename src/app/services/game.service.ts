@@ -6,6 +6,7 @@ import { Card } from '../models/Card';
 import { ChronoService } from './chrono.service';
 import { Router } from '@angular/router';
 import { GameMode } from '../models/GameMode';
+import { UserChrono } from '../models/userChrono';
 
 @Injectable({
   providedIn: 'root',
@@ -35,6 +36,14 @@ export class GameService {
   private _gameMode: GameMode = GameMode.CLASSIC;
   private _gameToken: string | null = null;
   private _card: Card | null = null;
+  private _userLiveChrono: UserChrono = {
+    chronoValue: 0,
+    ranking: 0,
+  };
+  private _userBestChrono: UserChrono = {
+    chronoValue: 0,
+    ranking: 0,
+  };
 
   // PUBLIC
   // on expose nos observables.
@@ -59,14 +68,14 @@ export class GameService {
       .checkAnswer(this._gameMode, this._gameToken!, choiceIndex)
       .subscribe({
         next: (response) => {
-          
-          // on checke une eventuelle victoire
-          if(response.chrono) {
-            alert('you win ' + response.chrono);
+          // on checke si la fin de partie est atteinte
+          if (response.chronoValue) {
+            this._userLiveChrono = response;
+
             this.resetGame();
             return;
           }
-          
+
           this._card = response.card;
           this._gameToken = response.gameToken;
           if (response.correct) this._counters.success++;
@@ -117,6 +126,10 @@ export class GameService {
 
     // on réinitialise les données du jeu
     this._card = null;
+    // this._userChrono = {
+    //   chronoValue: 0,
+    //   ranking: 0,
+    // }
     this._counters = {
       success: 0,
       errors: 0,
@@ -131,5 +144,9 @@ export class GameService {
 
   card(): Card | null {
     return this._card || null;
+  }
+
+  userLiveChrono(): UserChrono {
+    return this._userLiveChrono;
   }
 }
