@@ -32,7 +32,7 @@ body { margin: 0; font-family: "Sawarabi Mincho", sans-serif; }
     /* Arrondi des coins */
     background-color: #f8f9fa;
     /* Fond gris clair */
-    transition: all 0.2s ease-in-out;
+/*    transition: all 0.2s ease-in-out;*/
     /* Animation fluide */
 }
 
@@ -42,4 +42,14 @@ body { margin: 0; font-family: "Sawarabi Mincho", sans-serif; }
     /* Fond légèrement plus foncé au survol */
     border-color: #3b3d41;
     /* Bordure bleue au survol */
+}
+
+.correctAnswer {
+    background-color: rgba(var(--bs-success-rgb), 0.2);
+    /* Vert clair transparent */
+}
+
+.unCorrectAnswer {
+    background-color: rgba(var(--bs-danger-rgb), 0.2);
+    /* Rouge clair transparent */
 }

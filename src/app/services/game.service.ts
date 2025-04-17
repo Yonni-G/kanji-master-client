@@ -24,9 +24,13 @@ export class GameService {
     return this._chronoService;
   }
 
+  // Subject pour l'état du chronometre
   private readonly startSubject = new Subject<void>();
   private readonly stopSubject = new Subject<void>();
   private readonly resetSubject = new Subject<void>();
+
+  // Subject pour l'affichage du classement
+  refreshRanking$ = new Subject<void>();
 
   private _counters = {
     success: 0,
@@ -36,16 +40,8 @@ export class GameService {
   private _gameMode: GameMode = GameMode.CLASSIC;
   private _gameToken: string | null = null;
   private _card: Card | null = null;
-  private _userLiveChrono: UserChrono = {
-    chronoValue: 0,
-    ranking: 0,
-    username: '',
-  };
-  private _userBestChrono: UserChrono = {
-    chronoValue: 0,
-    ranking: 0,
-    username: '',
-  };
+  private _userLiveChrono: UserChrono | null = null;
+  private _feedbackClass: string = ''; // Classe dynamique pour feedback
 
   // PUBLIC
   // on expose nos observables.
@@ -55,10 +51,9 @@ export class GameService {
   // --
   isLoading: boolean = false;
 
-  constructor(private readonly router: Router) {}
-
   initGame(gameMode: GameMode) {
     this._gameMode = gameMode;
+    this._userLiveChrono = null;
   }
 
   onCheck(choiceIndex: number) {
@@ -73,15 +68,26 @@ export class GameService {
           // on checke si la fin de partie est atteinte
           if (response.chronoValue) {
             this._userLiveChrono = response;
-
+            // on demande au component du classement de se rafraichir
+            this.refreshRanking$.next();
             this.resetGame();
             return;
           }
 
-          this._card = response.card;
+          
           this._gameToken = response.gameToken;
-          if (response.correct) this._counters.success++;
-          else this._counters.errors++;
+          if (response.correct) {
+            this._counters.success++;
+            this._feedbackClass = 'correctAnswer';
+          } else {
+            this._counters.errors++;
+            this._feedbackClass = 'unCorrectAnswer';
+          }
+          // Réinitialiser la classe après un délai de 1 seconde (1000 ms)
+          setTimeout(() => {
+            this._feedbackClass = ''; // Réinitialiser la classe après l'animation
+            this._card = response.card;
+          }, 500); // Délai pour voir l'effet avant réinitialisation
         },
         error: (err) => {
           console.error('Erreur lors du contrôle de la réponse', err);
@@ -97,13 +103,13 @@ export class GameService {
       return;
     }
 
-    // on démarre le jeu et en retour on obtient une carte
+    this._userLiveChrono = null;
 
+    // on démarre le jeu et en retour on obtient une carte
     this.isLoading = true;
     this.startGame(this._gameMode, () => {
       this.isLoading = false;
       this.startSubject.next(); // Démarrer le chrono
-      //this._nextCard();
     });
   }
 
@@ -128,10 +134,6 @@ export class GameService {
 
     // on réinitialise les données du jeu
     this._card = null;
-    // this._userChrono = {
-    //   chronoValue: 0,
-    //   ranking: 0,
-    // }
     this._counters = {
       success: 0,
       errors: 0,
@@ -148,7 +150,11 @@ export class GameService {
     return this._card || null;
   }
 
-  userLiveChrono(): UserChrono {
+  userLiveChrono(): UserChrono | null {
     return this._userLiveChrono;
+  }
+
+  feedbackClass() {
+    return this._feedbackClass;
   }
 }

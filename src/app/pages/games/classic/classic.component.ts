@@ -10,14 +10,24 @@ import { NgClass, UpperCasePipe } from '@angular/common';
 import { AuthService } from '../../../services/auth.service';
 import { GameMode } from '../../../models/GameMode';
 import { ChronoFormatPipe } from '../../../pipes/chrono-format.pipe';
+import { RankingComponent } from "../../../components/games/ranking/ranking.component";
+import { animate, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'app-classic',
-  imports: [UpperCasePipe, ChronometerComponent, ChronoFormatPipe],
+  imports: [
+    UpperCasePipe,
+    ChronometerComponent,
+    ChronoFormatPipe,
+    RankingComponent,
+    NgClass,
+  ],
   templateUrl: './classic.component.html',
   styleUrl: './classic.component.css',
 })
 export class ClassicComponent {
+  classic = GameMode.CLASSIC;
+
   private _time: number | null = null;
   authService = inject(AuthService);
 
@@ -45,6 +55,10 @@ export class ClassicComponent {
 
   get userLiveChrono() {
     return this.gameService.userLiveChrono();
+  }
+  
+  feedbackClass() {
+    return this.gameService.feedbackClass();
   }
 
   onStart() {
