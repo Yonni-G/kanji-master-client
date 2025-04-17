@@ -39,10 +39,12 @@ export class GameService {
   private _userLiveChrono: UserChrono = {
     chronoValue: 0,
     ranking: 0,
+    username: '',
   };
   private _userBestChrono: UserChrono = {
     chronoValue: 0,
     ranking: 0,
+    username: '',
   };
 
   // PUBLIC
