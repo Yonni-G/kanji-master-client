@@ -15,6 +15,10 @@ import { GameService } from '../../../services/game.service';
 export class RankingComponent {
   @Input() gameMode!: GameMode;
 
+  metrics = {
+    nbLimitRanking: 0,
+    totalChronos: 0,
+  }
   userBestChrono: UserChrono | null = null;
   chronos: UserChrono[] | null = null;
 
@@ -33,6 +37,7 @@ export class RankingComponent {
       (data) => {
         this.userBestChrono = data.userBestChrono;
         this.chronos = data.chronos;
+        this.metrics = data.metrics;
       },
       (error) => {
         console.error('Erreur lors du chargement du classement', error);

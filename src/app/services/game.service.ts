@@ -50,50 +50,59 @@ export class GameService {
   reset$ = this.resetSubject.asObservable();
   // --
   isLoading: boolean = false;
+  loadingCheckState:string = 'disabled';
 
   initGame(gameMode: GameMode) {
     this._gameMode = gameMode;
+    // on masque le chrono actuel
     this._userLiveChrono = null;
   }
 
   onCheck(choiceIndex: number) {
-    // on va interroger notre api en lui passant :
-    // - le choix du joueur (choiceIndex)
-    // - le gameToken
-    // ce dernier nous dira si oui ou non la reponse est bonne et il nous renverra une nouvelle response (token + card)
-    this.apiGameService
-      .checkAnswer(this._gameMode, this._gameToken!, choiceIndex)
-      .subscribe({
-        next: (response) => {
-          // on checke si la fin de partie est atteinte
-          if (response.chronoValue) {
-            this._userLiveChrono = response;
-            // on demande au component du classement de se rafraichir
-            this.refreshRanking$.next();
-            this.resetGame();
-            return;
-          }
+    this.loadingCheckState = 'enabled';
 
-          
-          this._gameToken = response.gameToken;
-          if (response.correct) {
-            this._counters.success++;
-            this._feedbackClass = 'correctAnswer';
-          } else {
-            this._counters.errors++;
-            this._feedbackClass = 'unCorrectAnswer';
-          }
-          // Réinitialiser la classe après un délai de 1 seconde (1000 ms)
-          setTimeout(() => {
-            this._feedbackClass = ''; // Réinitialiser la classe après l'animation
-            this._card = response.card;
-          }, 500); // Délai pour voir l'effet avant réinitialisation
-        },
-        error: (err) => {
-          console.error('Erreur lors du contrôle de la réponse', err);
-        },
-      });
-    this._counters.total++;
+    // Étape 1 : on commence par activer le loading
+    setTimeout(() => {
+      this.apiGameService
+        .checkAnswer(this._gameMode, this._gameToken!, choiceIndex)
+        .subscribe({
+          next: (response) => {
+            // fin de partie ?
+            if (response.chronoValue) {
+              this._userLiveChrono = response;
+              // TODO : voir pour ne pas rafraichir le classement systematiquement
+              this.refreshRanking$.next();
+              this.resetGame();
+              this.loadingCheckState = 'disabled';
+              return;
+            }
+
+            this._gameToken = response.gameToken;
+
+            if (response.correct) {
+              this._counters.success++;
+              this._feedbackClass = 'correctAnswer';
+            } else {
+              this._counters.errors++;
+              this._feedbackClass = 'unCorrectAnswer';
+            }
+            this.loadingCheckState = 'masquer les boutons';
+            // Étape 2 : laisser apparaître la couleur de feedback
+            setTimeout(() => {
+              this.isLoading = false;
+              this._card = response.card; // nouvelle carte
+              this._feedbackClass = ''; // reset couleur
+              this.loadingCheckState = 'disabled';
+            }, 800); // délai feedback visible (ajustable)
+          },
+          error: (err) => {
+            console.error('Erreur lors du contrôle de la réponse', err);
+            this.isLoading = false;
+          },
+        });
+
+      this._counters.total++;
+    }, 400); // petite latence avant la requête (pour bien voir le spinner si besoin)
   }
 
   StopAndStartGame() {
@@ -103,6 +112,7 @@ export class GameService {
       return;
     }
 
+    // on masque le dernier chrono 
     this._userLiveChrono = null;
 
     // on démarre le jeu et en retour on obtient une carte

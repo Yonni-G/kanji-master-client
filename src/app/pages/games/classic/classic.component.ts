@@ -11,7 +11,7 @@ import { AuthService } from '../../../services/auth.service';
 import { GameMode } from '../../../models/GameMode';
 import { ChronoFormatPipe } from '../../../pipes/chrono-format.pipe';
 import { RankingComponent } from "../../../components/games/ranking/ranking.component";
-import { animate, style, transition, trigger } from '@angular/animations';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'app-classic',
@@ -27,6 +27,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
 })
 export class ClassicComponent {
   classic = GameMode.CLASSIC;
+  clickedChoiceIndex: number | null = null;
 
   private _time: number | null = null;
   authService = inject(AuthService);
@@ -45,6 +46,10 @@ export class ClassicComponent {
     return this.gameService.isLoading;
   }
 
+  get loadingCheckState(): string {
+    return this.gameService.loadingCheckState;
+  }
+
   get card(): Card | null {
     return this.gameService.card();
   }
@@ -56,7 +61,7 @@ export class ClassicComponent {
   get userLiveChrono() {
     return this.gameService.userLiveChrono();
   }
-  
+
   feedbackClass() {
     return this.gameService.feedbackClass();
   }
