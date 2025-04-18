@@ -12,6 +12,7 @@ import { GameMode } from '../../../models/GameMode';
 import { ChronoFormatPipe } from '../../../pipes/chrono-format.pipe';
 import { RankingComponent } from "../../../components/games/ranking/ranking.component";
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { ListErrorsComponent } from "../../../components/games/list-errors/list-errors.component";
 
 @Component({
   selector: 'app-classic',
@@ -21,7 +22,8 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
     ChronoFormatPipe,
     RankingComponent,
     NgClass,
-  ],
+    ListErrorsComponent
+],
   templateUrl: './classic.component.html',
   styleUrl: './classic.component.css',
 })
@@ -71,8 +73,8 @@ export class ClassicComponent {
     this.gameService.StopAndStartGame();
   }
 
-  onCheck(choiceIndex: number) {
-    this.gameService.onCheck(choiceIndex);
+  onCheck(choiceIndex: number, card: Card | null) {
+    this.gameService.onCheck(choiceIndex, card!);
   }
 
   ngOnInit() {

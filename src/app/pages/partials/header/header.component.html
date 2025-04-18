@@ -5,7 +5,7 @@
       <!-- Logo + Titre intégré -->
       <a class="navbar-brand d-flex align-items-center gap-2" href="#">
         <img src="assets/images/logo-kanji-master.png" alt="Kanji Master" height="82" class="rounded shadow-sm">
-        <span class="text-danger fw-bold fs-5">Kanji-Master</span>
+        <span class="text-danger fw-bold fs-5">Kanji-Master • Jeux</span>
       </a>
 
       <!-- Bouton mobile -->
@@ -20,17 +20,21 @@
         <!-- Liens centraux -->
         <ul class="navbar-nav mx-auto d-flex flex-row justify-content-center gap-3 w-100">
           <li class="nav-item">
-            <span class="nav-link text-dark fw-semibold">Jeux Kanji-Master :</span>
+            <span class="nav-link text-dark fw-semibold"></span>
           </li>
           <li class="nav-item">
-            <a class="nav-link text-dark fw-semibold text-decoration-underline" [routerLink]="['/games/classic']" routerLinkActive="active">Classic</a>
+            <a class="nav-link text-dark fw-semibold text-decoration-underline" [routerLink]="['/games/classic']"
+              routerLinkActive="active">Classic</a>
           </li>
           <li class="nav-item">
             <a class="nav-link text-dark fw-semibold text-decoration-underline" [routerLink]="['/games/reverse']"
               routerLinkActive="active">Reverse</a>
           </li>
           <li class="nav-item">
-            <span class="nav-link text-dark fw-semibold">Mix (à venir)</span>
+
+            <a class="nav-link text-dark fw-semibold text-decoration-underline "
+              href="https://www.buymeacoffee.com/yonni" target="_blank">☕ Me payer un café</a>
+
           </li>
         </ul>
 
@@ -50,7 +54,7 @@
             <a class="btn btn-outline-danger fw-bold text-center" [routerLink]="['/dashboard/profile']"
               routerLinkActive="active">
               [ {{ username }} ]<br> <!-- Retour à la ligne -->
-              Mes chronos
+              Mon profil
             </a>
           </li>
           <li class="nav-item">

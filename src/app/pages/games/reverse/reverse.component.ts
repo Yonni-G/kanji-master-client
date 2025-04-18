@@ -46,8 +46,8 @@ export class ReverseComponent {
     this.gameService.StopAndStartGame();
   }
 
-  onCheck(choiceIndex: number) {
-    this.gameService.onCheck(choiceIndex);
+  onCheck(choiceIndex: number, card: Card) {
+    this.gameService.onCheck(choiceIndex, card);
   }
 
   ngOnInit() {

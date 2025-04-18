@@ -4,9 +4,9 @@ import { Subject } from 'rxjs';
 import { ApiGameService } from './api.game.service';
 import { Card } from '../models/Card';
 import { ChronoService } from './chrono.service';
-import { Router } from '@angular/router';
 import { GameMode } from '../models/GameMode';
 import { UserChrono } from '../models/userChrono';
+import { CardError } from '../models/CardError';
 
 @Injectable({
   providedIn: 'root',
@@ -40,6 +40,8 @@ export class GameService {
   private _gameMode: GameMode = GameMode.CLASSIC;
   private _gameToken: string | null = null;
   private _card: Card | null = null;
+  listErrors: CardError[] = [];
+
   private _userLiveChrono: UserChrono | null = null;
   private _feedbackClass: string = ''; // Classe dynamique pour feedback
 
@@ -50,7 +52,7 @@ export class GameService {
   reset$ = this.resetSubject.asObservable();
   // --
   isLoading: boolean = false;
-  loadingCheckState:string = 'disabled';
+  loadingCheckState: string = 'disabled';
 
   initGame(gameMode: GameMode) {
     this._gameMode = gameMode;
@@ -58,7 +60,7 @@ export class GameService {
     this._userLiveChrono = null;
   }
 
-  onCheck(choiceIndex: number) {
+  onCheck(choiceIndex: number, card: Card) {
     this.loadingCheckState = 'enabled';
 
     // Étape 1 : on commence par activer le loading
@@ -85,6 +87,14 @@ export class GameService {
             } else {
               this._counters.errors++;
               this._feedbackClass = 'unCorrectAnswer';
+
+              // on collecte les erreurs
+              this.listErrors.push({
+                proposal: card?.proposal,
+                correct: card?.choices[response.correctIndex].label,
+                unCorrect: card?.choices[choiceIndex].label,
+              });
+              console.log(this.listErrors);
             }
             this.loadingCheckState = 'masquer les boutons';
             // Étape 2 : laisser apparaître la couleur de feedback
@@ -112,7 +122,7 @@ export class GameService {
       return;
     }
 
-    // on masque le dernier chrono 
+    // on masque le dernier chrono
     this._userLiveChrono = null;
 
     // on démarre le jeu et en retour on obtient une carte
@@ -144,6 +154,8 @@ export class GameService {
 
     // on réinitialise les données du jeu
     this._card = null;
+    this.listErrors = [];
+
     this._counters = {
       success: 0,
       errors: 0,

@@ -91,7 +91,7 @@
                 @if(card?.choices ) {
                     @if(loadingCheckState == 'disabled') {
                         @for(choice of card?.choices; track $index) {
-                        <button (click)="onCheck($index)" type="button" class="btn choice flex-fill my-1 mx-md-1">
+                        <button (click)="onCheck($index, card)" type="button" class="btn choice flex-fill my-1 mx-md-1">
                             {{ choice.label | uppercase }}
                         </button>
                         }
@@ -109,3 +109,5 @@
 
     </div>
 </div>
+
+<app-list-errors></app-list-errors>
