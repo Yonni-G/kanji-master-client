@@ -29,7 +29,7 @@ export class ForgotPasswordComponent {
 
   onSubmit() {
     if (this.form.valid) {
-      console.log(this.form.value);
+      //console.log(this.form.value);
 
       let user: User = {
         username: '',
@@ -62,7 +62,7 @@ export class ForgotPasswordComponent {
         },
       });
     } else {
-      console.log('Form is invalid');
+      //console.log('Form is invalid');
       this.messageService.setMessage({
         text: 'Form is invalid',
         type: 'error',

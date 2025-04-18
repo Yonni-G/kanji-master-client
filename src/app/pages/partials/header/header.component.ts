@@ -32,29 +32,7 @@ export class HeaderComponent {
   protected(event: Event) {
     event.preventDefault(); // Empêche le comportement par défaut du lien
     this.apiService.getTestProtected().subscribe((response) => {
-      console.log('Réponse protégée:', response);
-    });
-  }
-
-  test1() {
-    this.authService.test().subscribe({
-      next: (res) => {
-        console.log(res);
-      },
-      error: (error) => {
-        console.error(error);
-      },
-    });
-  }
-
-  test2() {
-    this.authService.checkRefreshToken().subscribe({
-      next: (res) => {
-        console.log(res);
-      },
-      error: (error) => {
-        console.error(error);
-      },
+      //console.log('Réponse protégée:', response);
     });
   }
 }

@@ -93,7 +93,7 @@ export class GameService {
               this._card = response.card; // nouvelle carte
               this._feedbackClass = ''; // reset couleur
               this.loadingCheckState = 'disabled';
-            }, 800); // délai feedback visible (ajustable)
+            }, 400); // délai feedback visible (ajustable)
           },
           error: (err) => {
             console.error('Erreur lors du contrôle de la réponse', err);
@@ -102,7 +102,7 @@ export class GameService {
         });
 
       this._counters.total++;
-    }, 400); // petite latence avant la requête (pour bien voir le spinner si besoin)
+    }, 200); // petite latence avant la requête (pour bien voir le spinner si besoin)
   }
 
   StopAndStartGame() {
@@ -129,7 +129,7 @@ export class GameService {
       next: (response) => {
         this._card = response.card;
         this._gameToken = response.gameToken;
-        console.log(this._gameToken);
+        //console.log(this._gameToken);
         if (onLoaded) onLoaded();
       },
       error: (err) => {

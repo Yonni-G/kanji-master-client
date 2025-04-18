@@ -48,7 +48,7 @@ export class RegisterComponent {
 
   onSubmit() {
     if (this.form.valid) {
-      console.log(this.form.value);
+      //console.log(this.form.value);
 
       let user: User = {
         username: this.form.value.username || '',
@@ -65,7 +65,7 @@ export class RegisterComponent {
                })
              ).subscribe({
         next: (response) => {
-          console.log('Registration successful', response);
+          //console.log('Registration successful', response);
           this.messageService.setMessage(
             { text: response.message, type: 'success' },
             5000
@@ -78,7 +78,7 @@ export class RegisterComponent {
         },
       });
     } else {
-      console.log('Form is invalid');
+      //console.log('Form is invalid');
       this.messageService.setMessage({
         text: 'Form is invalid',
         type: 'error',

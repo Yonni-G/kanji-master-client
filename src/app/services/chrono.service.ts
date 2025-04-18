@@ -21,7 +21,7 @@ export class ChronoService {
   // on s'abonne aux événements du service de jeu pour démarrer, arrêter et réinitialiser le chrono
   constructor() {
     this.gameService.start$.subscribe(() => {
-      console.log('start$ trigger');
+      //console.log('start$ trigger');
       this.startGame();
     });
     this.gameService.stop$.subscribe(() => this.stopGame());
