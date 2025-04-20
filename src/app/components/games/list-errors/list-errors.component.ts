@@ -1,5 +1,4 @@
 import { Component, inject } from '@angular/core';
-import { CardError } from '../../../models/CardError';
 import { GameService } from '../../../services/game.service';
 
 @Component({
@@ -9,7 +8,7 @@ import { GameService } from '../../../services/game.service';
   styleUrl: './list-errors.component.css',
 })
 export class ListErrorsComponent {
-  //listErrors: CardError[] = [];
+  showErrors: boolean = false;
 
   gameService: GameService = inject(GameService);
 

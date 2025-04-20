@@ -11,8 +11,8 @@ import { AuthService } from '../../../services/auth.service';
 import { GameMode } from '../../../models/GameMode';
 import { ChronoFormatPipe } from '../../../pipes/chrono-format.pipe';
 import { RankingComponent } from "../../../components/games/ranking/ranking.component";
-import { animate, state, style, transition, trigger } from '@angular/animations';
 import { ListErrorsComponent } from "../../../components/games/list-errors/list-errors.component";
+import { ModalComponent } from "../../../components/modal/modal.component";
 
 @Component({
   selector: 'app-classic',
@@ -22,8 +22,9 @@ import { ListErrorsComponent } from "../../../components/games/list-errors/list-
     ChronoFormatPipe,
     RankingComponent,
     NgClass,
-    ListErrorsComponent
-],
+    ListErrorsComponent,
+    ModalComponent,
+  ],
   templateUrl: './classic.component.html',
   styleUrl: './classic.component.css',
 })
@@ -41,6 +42,9 @@ export class ClassicComponent {
   ) {
     this.chronoService.time$.pipe(takeUntilDestroyed()).subscribe((time) => {
       this._time = time;
+    });
+    this.gameService.openModale$.subscribe(() => {
+      this.openModal();
     });
   }
 
@@ -79,6 +83,16 @@ export class ClassicComponent {
 
   ngOnInit() {
     this.gameService.resetGame();
-    //this.gameService.loadClassicCards();
+  }
+
+  showModal = false;
+
+  openModal() {
+    this.showModal = true;
+  }
+
+  closeModal() {
+    this.showModal = false;
+    this.gameService.resetGame();
   }
 }

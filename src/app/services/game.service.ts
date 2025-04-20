@@ -31,6 +31,8 @@ export class GameService {
 
   // Subject pour l'affichage du classement
   refreshRanking$ = new Subject<void>();
+  // Subject pour l'affichage de la modale
+  openModale$ = new Subject<void>();
 
   private _counters = {
     success: 0,
@@ -40,6 +42,7 @@ export class GameService {
   private _gameMode: GameMode = GameMode.CLASSIC;
   private _gameToken: string | null = null;
   private _card: Card | null = null;
+  private _listErrors: CardError[] = [];
   listErrors: CardError[] = [];
 
   private _userLiveChrono: UserChrono | null = null;
@@ -69,13 +72,23 @@ export class GameService {
         .checkAnswer(this._gameMode, this._gameToken!, choiceIndex)
         .subscribe({
           next: (response) => {
-            // fin de partie ?
+            
+            this._counters.total++;
+            
+            // FIN DE PARTIE
             if (response.chronoValue) {
+
               this._userLiveChrono = response;
               // TODO : voir pour ne pas rafraichir le classement systematiquement
               this.refreshRanking$.next();
-              this.resetGame();
+
               this.loadingCheckState = 'disabled';
+              // on affiche les erreurs
+              this.listErrors = this._listErrors;
+              // ON AFFICHE la modale
+              this.openModale$.next();
+              
+
               return;
             }
 
@@ -89,13 +102,14 @@ export class GameService {
               this._feedbackClass = 'unCorrectAnswer';
 
               // on collecte les erreurs
-              this.listErrors.push({
+              this._listErrors.push({
                 proposal: card?.proposal,
                 correct: card?.choices[response.correctIndex].label,
                 unCorrect: card?.choices[choiceIndex].label,
               });
-              console.log(this.listErrors);
+              console.log(this._listErrors);
             }
+            
             this.loadingCheckState = 'masquer les boutons';
             // Étape 2 : laisser apparaître la couleur de feedback
             setTimeout(() => {
@@ -111,7 +125,7 @@ export class GameService {
           },
         });
 
-      this._counters.total++;
+      
     }, 200); // petite latence avant la requête (pour bien voir le spinner si besoin)
   }
 
@@ -124,6 +138,9 @@ export class GameService {
 
     // on masque le dernier chrono
     this._userLiveChrono = null;
+    // on reinit les tableaux d'erreurs
+    this._listErrors = [];
+    this.listErrors = [];
 
     // on démarre le jeu et en retour on obtient une carte
     this.isLoading = true;
@@ -133,7 +150,7 @@ export class GameService {
     });
   }
 
-  // chargement de cartes avec callback optionnel
+  // chargement de cartes avec callback loading optionnel
   startGame(gameMode: GameMode, onLoaded?: () => void) {
     this.apiGameService.startGame(gameMode).subscribe({
       next: (response) => {
@@ -154,8 +171,6 @@ export class GameService {
 
     // on réinitialise les données du jeu
     this._card = null;
-    this.listErrors = [];
-
     this._counters = {
       success: 0,
       errors: 0,
@@ -163,7 +178,7 @@ export class GameService {
     };
   }
 
-  // accesseurs
+  // accesseurs d'affichage
   counters() {
     return this._counters;
   }

@@ -25,11 +25,11 @@ export class LoginComponent {
   loading = false;
 
   form = new FormGroup({
-    email: new FormControl('yonni4@gmail.com', [
+    email: new FormControl('Yonni4@gmail.com', [
       Validators.required,
       Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$'),
     ]),
-    password: new FormControl('Yonni45!!', [
+    password: new FormControl('Popo45!!', [
       Validators.required,
       // Au moins 8 caractères, au moins une lettre minuscule, une lettre majuscule, un chiffre et un caractère spécial
       Validators.pattern(
@@ -48,31 +48,28 @@ export class LoginComponent {
       };
 
       // on va interroger notre api via le service authService
-     this.loading = true;
+      this.loading = true;
 
-     this.authService
-       .login(user)
-       .pipe(
-         finalize(() => {
-           this.loading = false; // ← toujours exécuté
-         })
-       )
-       .subscribe({
-         next: (res) => {
-           // Succès
-           this.router.navigate(['/']);
-         },
-         error: (err) => {
-           // Erreur
-           this.messageService.setMessage({
-             text: err.error.message,
-             type: 'error',
-           });
-         },
-       });
-
-
-
+      this.authService
+        .login(user)
+        .pipe(
+          finalize(() => {
+            this.loading = false; // ← toujours exécuté
+          })
+        )
+        .subscribe({
+          next: (res) => {
+            // Succès
+            this.router.navigate(['/']);
+          },
+          error: (err) => {
+            // Erreur
+            this.messageService.setMessage({
+              text: err.error.message,
+              type: 'error',
+            });
+          },
+        });
     } else {
       // form invalide
       this.messageService.setMessage({
@@ -80,6 +77,5 @@ export class LoginComponent {
         type: 'error',
       });
     }
-    
   }
 }

@@ -92,16 +92,25 @@ export class AuthService {
   }
 
   logout(): void {
-    // on va supprimer le cookie http only refreshToken puis effacer le accessToken du sessionStorage, passer nos BehaviorSubject à null et rediriger vers la page de login
+    // Supprimer les informations d'authentification localement (indépendamment du succès ou de l'échec de la déconnexion distante)
+    sessionStorage.removeItem(this.ACCESS_TOKEN);
+    this.accessToken$.next(null);
+    this.username$.next(null);
+
+    // Maintenant tenter de faire le logout à distance
     this.apiService.logout().subscribe({
       next: () => {
-        sessionStorage.removeItem(this.ACCESS_TOKEN);
-        this.accessToken$.next(null);
-        this.username$.next(null);
+        // Si la déconnexion distante réussit, rediriger vers la page de login
         this.router.navigate(['/login']);
       },
       error: (error) => {
-        console.error(error.message, error);
+        // En cas d'échec de la déconnexion distante, simplement afficher une erreur, mais ne pas empêcher la déconnexion locale
+        console.error(
+          'Échec de la déconnexion à distance :',
+          error.message,
+          error
+        );
+        // Tu peux également gérer un message utilisateur pour indiquer qu'il y a eu une erreur sur la déconnexion distante, mais que localement l'utilisateur est déconnecté.
       },
     });
   }
