@@ -75,13 +75,15 @@ export class GameService {
             
             this._counters.total++;
             
-            // FIN DE PARTIE
+            // FIN DE PARTIE ?
             if (response.chronoValue) {
 
               this._userLiveChrono = response;
               // TODO : voir pour ne pas rafraichir le classement systematiquement
               this.refreshRanking$.next();
 
+              // on arrete le chrono
+              this.stopSubject.next();
               this.loadingCheckState = 'disabled';
               // on affiche les erreurs
               this.listErrors = this._listErrors;
@@ -107,7 +109,7 @@ export class GameService {
                 correct: card?.choices[response.correctIndex].label,
                 unCorrect: card?.choices[choiceIndex].label,
               });
-              console.log(this._listErrors);
+              //console.log(this._listErrors);
             }
             
             this.loadingCheckState = 'masquer les boutons';
@@ -144,6 +146,7 @@ export class GameService {
 
     // on démarre le jeu et en retour on obtient une carte
     this.isLoading = true;
+    
     this.startGame(this._gameMode, () => {
       this.isLoading = false;
       this.startSubject.next(); // Démarrer le chrono
@@ -171,6 +174,7 @@ export class GameService {
 
     // on réinitialise les données du jeu
     this._card = null;
+    
     this._counters = {
       success: 0,
       errors: 0,

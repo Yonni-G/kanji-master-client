@@ -9,6 +9,8 @@ import { authGuard } from './guards/auth.guard';
 import { ClassicComponent } from './pages/games/classic/classic.component';
 import { GameLayoutComponent } from './pages/games/game-layout/game-layout.component';
 import { ReverseComponent } from './pages/games/reverse/reverse.component';
+import { IdeasComponent } from './pages/ideas/ideas.component';
+import { GameMode } from './models/GameMode';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -28,13 +30,25 @@ export const routes: Routes = [
       {
         path: 'classic',
         component: ClassicComponent,
+        data: {
+          title: 'Classic',
+          gameMode: GameMode.CLASSIC,
+          subtitle:
+            'Devinez le sens associé à 10 Kanji le plus rapidement possible',
+        },
       },
       {
         path: 'reverse',
         component: ReverseComponent,
+        data: {
+          title: 'Reverse',
+          gameMode: GameMode.REVERSE,
+          subtitle:
+            'Devinez 10 Kanji associés au sens proposé le + rapidement possible !',
+        },
       },
       { path: '', redirectTo: 'classic', pathMatch: 'full' }, // fallback
     ],
   },
-  //{ path: '', redirectTo: 'games/classic', pathMatch: 'full' },
+  { path: 'ideas', component: IdeasComponent },
 ];

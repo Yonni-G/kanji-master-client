@@ -1,5 +1,6 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { GameService } from '../../../services/game.service';
+import { GameMode } from '../../../models/GameMode';
 
 @Component({
   selector: 'app-list-errors',
@@ -9,7 +10,7 @@ import { GameService } from '../../../services/game.service';
 })
 export class ListErrorsComponent {
   showErrors: boolean = false;
-
+  @Input() gameMode: GameMode | null = null;
   gameService: GameService = inject(GameService);
 
   get listErrors() {
