@@ -80,7 +80,6 @@ export class GameLayoutComponent {
   }
 
   onStart() {
-    this.gameService.initGame(GameMode.CLASSIC);
     this.gameService.StopAndStartGame();
   }
 

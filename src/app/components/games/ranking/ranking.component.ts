@@ -26,22 +26,22 @@ export class RankingComponent {
   private readonly gameService = inject(GameService);
 
   ngOnInit() {
-    this.loadRanking();
+    //this.loadRanking();
     this.gameService.refreshRanking$.subscribe(() => {
       this.loadRanking();
     });
   }
 
   loadRanking() {
-    this.apiGameService.loadRanking(this.gameMode).subscribe(
-      (data) => {
+    this.apiGameService.loadRanking(this.gameMode).subscribe({
+      next: (data) => {
         this.userBestChrono = data.userBestChrono;
         this.chronos = data.chronos;
         this.metrics = data.metrics;
       },
-      (error) => {
+      error: (error) => {
         console.error('Erreur lors du chargement du classement', error);
       }
-    );
+    });
   }
 }

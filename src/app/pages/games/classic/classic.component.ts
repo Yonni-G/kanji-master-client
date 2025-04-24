@@ -4,6 +4,7 @@ import { GameService } from '../../../services/game.service';
 import { Card } from '../../../models/Card';
 import { UpperCasePipe } from '@angular/common';
 import { AuthService } from '../../../services/auth.service';
+import { GameMode } from '../../../models/GameMode';
 
 @Component({
   selector: 'app-classic',
@@ -29,6 +30,8 @@ export class ClassicComponent {
   }
 
   ngOnInit() {
+    this.gameService.initGame(GameMode.CLASSIC);
+    this.gameService.resetGame();
     this.gameService.refreshRanking$.next();
   }
 }

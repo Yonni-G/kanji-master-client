@@ -10,79 +10,87 @@ import { User } from '../models/user';
 export class ApiAuthService {
   constructor(private readonly http: HttpClient) {}
 
+  toggleAlertOutOfRanking(alertOutOfRanking: boolean) {
+    return this.http.post<any>(`${environment.apiUrl}/users/toggle-alert-out-of-ranking`, {
+      alertOutOfRanking,
+    });
+  }
+
   // on interroge l'api pour savoir si le refreshToken existe et est valide
   checkRefreshToken(): Observable<any> {
-    return this.http
-      .get<any>(`${environment.apiUrl}/users/check-refresh-token`, {
+    return this.http.get<any>(
+      `${environment.apiUrl}/users/check-refresh-token`,
+      {
         withCredentials: true,
-      })
+      }
+    );
   }
 
   // on interroge l'api pour savoir si le resetoken existe et est valide
   checkResetToken(resetToken: string): Observable<any> {
-    return this.http
-      .post<any>(`${environment.apiUrl}/users/check-reset-token`, { resetToken },{
+    return this.http.post<any>(
+      `${environment.apiUrl}/users/check-reset-token`,
+      { resetToken },
+      {
         withCredentials: true,
-      });
+      }
+    );
   }
 
   // Méthode pour récupérer le message depuis la route /test
   getTestMessage(): Observable<any> {
-    return this.http
-      .get<any>(`${environment.apiUrl}/users/test`, {
-        withCredentials: true,
-      })
+    return this.http.get<any>(`${environment.apiUrl}/users/test`, {
+      withCredentials: true,
+    });
   }
 
   getTestProtected(): Observable<any> {
-    return this.http
-      .get<any>(`${environment.apiUrl}/users/protected`, {
-        withCredentials: true,
-      })
+    return this.http.get<any>(`${environment.apiUrl}/users/protected`, {
+      withCredentials: true,
+    });
   }
 
   forgotPassword(user: User): Observable<any> {
-    return this.http
-      .post<any>(`${environment.apiUrl}/users/forgot-password`, user, {
+    return this.http.post<any>(
+      `${environment.apiUrl}/users/forgot-password`,
+      user,
+      {
         withCredentials: true,
-      })
+      }
+    );
   }
 
   register(user: User): Observable<any> {
-    return this.http
-      .post<any>(`${environment.apiUrl}/users/register`, user, {
-        withCredentials: true,
-      })
+    return this.http.post<any>(`${environment.apiUrl}/users/register`, user, {
+      withCredentials: true,
+    });
   }
 
   login(user: User): Observable<any> {
-    return this.http
-      .post<any>(`${environment.apiUrl}/users/login`, user, {
-        withCredentials: true,
-      })
+    return this.http.post<any>(`${environment.apiUrl}/users/login`, user, {
+      withCredentials: true,
+    });
   }
 
   // Méthode pour se déconnecter
   logout(): Observable<any> {
-    return this.http
-      .post<any>(
-        `${environment.apiUrl}/users/logout`,
-        {},
-        { withCredentials: true }
-      )
-    }
+    return this.http.post<any>(
+      `${environment.apiUrl}/users/logout`,
+      {},
+      { withCredentials: true }
+    );
+  }
 
   resetPassword(
     token: string,
     password: string,
     confirmPassword: string
   ): Observable<any> {
-    return this.http
-      .post<any>(
-        `${environment.apiUrl}/users/reset-password`,
-        { token, password, confirmPassword },
-        { withCredentials: true }
-      )
+    return this.http.post<any>(
+      `${environment.apiUrl}/users/reset-password`,
+      { token, password, confirmPassword },
+      { withCredentials: true }
+    );
   }
 
   // Gérer les erreurs globales
