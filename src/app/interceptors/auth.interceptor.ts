@@ -4,9 +4,10 @@ import {
   HttpInterceptor,
   HttpRequest,
   HttpErrorResponse,
+  HttpResponse,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, switchMap, throwError } from 'rxjs';
+import { Observable, catchError, switchMap, throwError, tap } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 
 @Injectable()
@@ -19,21 +20,18 @@ export class AuthInterceptor implements HttpInterceptor {
     req: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-
-     // ⛔️ Ignore l'appel à /api/refresh-token
-  if (
-    req.url.includes('/check-refresh-token') ||
-    req.url.includes('/check-reset-token') ||
-    req.url.includes('/login') ||
-    req.url.includes('/logout') ||
-    req.url.includes('/reset-password')
-  ) {
-    return next.handle(req);
-  }
+    if (
+      req.url.includes('/check-refresh-token') ||
+      req.url.includes('/check-reset-token') ||
+      req.url.includes('/login') ||
+      req.url.includes('/logout') ||
+      req.url.includes('/reset-password')
+    ) {
+      return next.handle(req);
+    }
 
     const accessToken = this.authService.getAccessTokenFromStorage();
 
-    // Clone la requête et ajoute le header Authorization si le token existe
     const authReq = accessToken
       ? req.clone({
           setHeaders: {
@@ -43,6 +41,17 @@ export class AuthInterceptor implements HttpInterceptor {
       : req;
 
     return next.handle(authReq).pipe(
+      tap((event) => {
+        // ✅ Si un nouveau token est renvoyé dans les headers de réponse
+        if (event instanceof HttpResponse) {
+          const newToken = event.headers.get('Authorization')?.split(' ')[1];
+          if (newToken) {
+            this.authService.setAccessTokenFromStorage(newToken);
+            this.authService.setAccessToken$(newToken);
+            
+          }
+        }
+      }),
       catchError((error) => {
         if (
           error instanceof HttpErrorResponse &&
@@ -50,20 +59,24 @@ export class AuthInterceptor implements HttpInterceptor {
           !this.isRefreshing
         ) {
           this.isRefreshing = true;
+
           return this.authService.checkRefreshToken().pipe(
-            switchMap((response:    any) => {
-              this.authService.setAccessToken$(response.accessToken);
+            switchMap((response: any) => {
+              const newToken = response.accessToken;
+              this.authService.setAccessToken$(newToken);
+
               const newReq = req.clone({
                 setHeaders: {
-                  Authorization: `Bearer ${response.accessToken}`,
+                  Authorization: `Bearer ${newToken}`,
                 },
               });
+
               this.isRefreshing = false;
               return next.handle(newReq);
             }),
             catchError((err) => {
               this.isRefreshing = false;
-              this.authService.logout(); // supprime le token et redirige
+              this.authService.logout();
               return throwError(() => err);
             })
           );

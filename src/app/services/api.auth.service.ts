@@ -11,9 +11,15 @@ export class ApiAuthService {
   constructor(private readonly http: HttpClient) {}
 
   toggleAlertOutOfRanking(alertOutOfRanking: boolean) {
-    return this.http.post<any>(`${environment.apiUrl}/users/toggle-alert-out-of-ranking`, {
-      alertOutOfRanking,
-    });
+    return this.http.post<any>(
+      `${environment.apiUrl}/users/toggle-alert-out-of-ranking`,
+      {
+        alertOutOfRanking,
+      },
+      {
+        withCredentials: true,
+      }
+    );
   }
 
   // on interroge l'api pour savoir si le refreshToken existe et est valide

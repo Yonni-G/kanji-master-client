@@ -33,6 +33,7 @@ export class ReverseComponent {
   ngOnInit() {
     this.gameService.initGame(GameMode.REVERSE);
     this.gameService.resetGame();
+    this.gameService.resetPostGameDatas();
     this.gameService.refreshRanking$.next();
   }
 }

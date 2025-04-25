@@ -15,7 +15,7 @@
                 @for(choice of card?.choices; track $index) {
                 <button (click)="onCheck($index, card)" type="button"
                     class="btn choice flex-fill"
-                    style="font-size: 5.5rem; padding: 1rem;">
+                    >
                     {{ choice.label }}
                 </button>
                 }

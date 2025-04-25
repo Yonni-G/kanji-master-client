@@ -11,7 +11,10 @@
       <div class="row justify-content-start gx-5 gy-4">
 
         @for (err of listErrors; track err; let i = $index) {
-          <div class="col-12 col-sm-6 col-md-5 col-lg-4 position-relative">
+          <div class="position-relative" [ngClass]="{
+                           'col-12 col-sm-6 col-md-5 col-lg-4': gameMode === GameMode.CLASSIC,
+                           'col-12 col-sm-6 col-md-4 col-lg-3': gameMode === GameMode.REVERSE
+                         }">
             <div class="card border rounded shadow-sm p-3">
               <!-- Numéro discret -->
               <div style="position: absolute; top: 6px; right: 10px; font-size: 0.9rem; color: #999;">
@@ -21,17 +24,17 @@
               <div class="d-flex align-items-stretch mt-4">
                 <!-- Affichage du kanji ou du sens selon le mode -->
                 <div class="me-3 d-flex align-items-center">
-                  @if(gameMode === 'classic') {
+                  @if(gameMode === GameMode.CLASSIC) {
                     <!-- Affichage du kanji pour le mode Classic -->
                     <span style="font-size: 6rem;">
                       {{ err.proposal }}
                     </span>
                   }
 
-                  @if(gameMode === 'reverse') {
+                  @if(gameMode === GameMode.REVERSE) {
                     <!-- Affichage du sens pour le mode Reverse -->
-                    <span class="text-uppercase" style="font-size: 3rem; font-weight: bold;">
-                      {{ err.correct }}
+                    <span class="text-uppercase" style="font-size: 1.5rem; font-weight: bold;">
+                      {{ err.proposal }}
                     </span>
                   }
                 </div>
@@ -39,8 +42,9 @@
                 <!-- Séparateur -->
                 <div style="width: 1px; background-color: #c7bbbb;"></div>
 
+                @if(gameMode === GameMode.CLASSIC) {
                 <!-- Réponses -->
-                <div class="ms-3 d-flex flex-column justify-content-center">
+                <div class="ms-3 d-flex flex-column justify-content-center" style="font-size: 1.5rem">
                   <span class="text-danger fw-bold text-uppercase text-decoration-line-through mt-2">
                     ✖ {{ err.unCorrect }}
                   </span>
@@ -48,6 +52,20 @@
                     ✔ {{ err.correct }}
                   </span>
                 </div>
+                }
+                
+                @if(gameMode === GameMode.REVERSE) {
+                <!-- Réponses -->
+                <div class="ms-3 d-flex flex-column justify-content-center align-items-center text-center" style="font-size: 2.5rem">
+                  <span class="text-danger fw-bold text-uppercase mt-2">
+                    {{ err.unCorrect }}
+                  </span>
+                  <span class="text-success fw-bold text-uppercase">
+                    {{ err.correct }}
+                  </span>
+                </div>
+
+                }
               </div>
             </div>
           </div>

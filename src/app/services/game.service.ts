@@ -90,7 +90,6 @@ export class GameService {
               // ON AFFICHE la modale
               this.openModale$.next();
               
-
               return;
             }
 
@@ -109,7 +108,7 @@ export class GameService {
                 correct: card?.choices[response.correctIndex].label,
                 unCorrect: card?.choices[choiceIndex].label,
               });
-              //console.log(this._listErrors);
+              console.log(this._listErrors);
             }
             
             this.loadingCheckState = 'masquer les boutons';
@@ -131,6 +130,15 @@ export class GameService {
     }, 200); // petite latence avant la requête (pour bien voir le spinner si besoin)
   }
 
+  // fonction qui va réinitialiser les données d'affichage post-partie
+  resetPostGameDatas() {
+    // on masque le dernier chrono
+    this._userLiveChrono = null;
+    // on reinit les tableaux d'erreurs
+    this._listErrors = [];
+    this.listErrors = [];
+  }
+
   StopAndStartGame() {
     // Si le jeu est déjà lancé => on reset
     if (this._card) {
@@ -138,11 +146,7 @@ export class GameService {
       return;
     }
 
-    // on masque le dernier chrono
-    this._userLiveChrono = null;
-    // on reinit les tableaux d'erreurs
-    this._listErrors = [];
-    this.listErrors = [];
+    this.resetPostGameDatas();
 
     // on démarre le jeu et en retour on obtient une carte
     this.isLoading = true;

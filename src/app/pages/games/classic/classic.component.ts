@@ -32,6 +32,7 @@ export class ClassicComponent {
   ngOnInit() {
     this.gameService.initGame(GameMode.CLASSIC);
     this.gameService.resetGame();
+    this.gameService.resetPostGameDatas();
     this.gameService.refreshRanking$.next();
   }
 }

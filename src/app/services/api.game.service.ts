@@ -11,7 +11,10 @@ export class ApiGameService {
   constructor(private readonly http: HttpClient) {}
 
   startGame(gameMode: GameMode): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/games/${gameMode}/start`);
+    return this.http.get<any>(
+      `${environment.apiUrl}/games/${gameMode}/start`,
+      { withCredentials: true } // 👈 ajoute les cookies
+    );
   }
 
   checkAnswer(
@@ -21,11 +24,15 @@ export class ApiGameService {
   ): Observable<any> {
     return this.http.post<any>(
       `${environment.apiUrl}/games/${gameMode}/checkAnswer`,
-      { gameToken, choiceIndex }
+      { gameToken, choiceIndex },
+      { withCredentials: true } // 👈 ajoute les cookies
     );
   }
 
   loadRanking(gameMode: GameMode): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/games/${gameMode}/ranking`);
+    return this.http.get<any>(
+      `${environment.apiUrl}/games/${gameMode}/ranking`,
+      { withCredentials: true } // 👈 ajoute les cookies
+    );
   }
 }
