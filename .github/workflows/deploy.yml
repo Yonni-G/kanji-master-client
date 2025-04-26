@@ -38,7 +38,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: dist-folder
-        path: dist/kanji-master-client # Remplace <nom-du-projet>
+        path: dist/kanji-master-client
 
   deploy:
     runs-on: ubuntu-latest
@@ -49,10 +49,10 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: dist-folder
-        path: dist/kanji-master-client # Remplace <nom-du-projet>
+        path: dist/kanji-master-client
 
     - name: Deploy to GitHub Pages
       uses: JamesIves/github-pages-deploy-action@v4
       with:
         branch: gh-pages
-        folder: dist/kanji-master-client # Remplace <nom-du-projet>
+        folder: dist/kanji-master-client
