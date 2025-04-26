@@ -1,9 +1,8 @@
 // game.service.ts
-import { inject, Injectable, Injector } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { ApiGameService } from './api.game.service';
 import { Card } from '../models/Card';
-import { ChronoService } from './chrono.service';
 import { GameMode } from '../models/GameMode';
 import { UserChrono } from '../models/userChrono';
 import { CardError } from '../models/CardError';
@@ -14,24 +13,11 @@ import { CardError } from '../models/CardError';
 export class GameService {
   private readonly apiGameService: ApiGameService = inject(ApiGameService);
 
-  /* TODO : voir pour faire mieux pour gérer la dependance circulaire */
-  private readonly injector = inject(Injector); // ✅ bonne syntaxe ici
-  private _chronoService!: ChronoService;
-  private get chronoService(): ChronoService {
-    if (!this._chronoService) {
-      this._chronoService = this.injector.get(ChronoService);
-    }
-    return this._chronoService;
-  }
-
-  // Subject pour l'état du chronometre
   private readonly startSubject = new Subject<void>();
   private readonly stopSubject = new Subject<void>();
   private readonly resetSubject = new Subject<void>();
 
-  // Subject pour l'affichage du classement
   refreshRanking$ = new Subject<void>();
-  // Subject pour l'affichage de la modale
   openModale$ = new Subject<void>();
 
   private _counters = {
@@ -39,57 +25,51 @@ export class GameService {
     errors: 0,
     total: 0,
   };
-  private _gameMode: GameMode = GameMode.CLASSIC;
+
+  private _gameMode!: GameMode;
   private _gameToken: string | null = null;
   private _card: Card | null = null;
   private _listErrors: CardError[] = [];
   listErrors: CardError[] = [];
-
   private _userLiveChrono: UserChrono | null = null;
-  private _feedbackClass: string = ''; // Classe dynamique pour feedback
+  private _feedbackClass: string = '';
 
-  // PUBLIC
-  // on expose nos observables.
   start$ = this.startSubject.asObservable();
   stop$ = this.stopSubject.asObservable();
   reset$ = this.resetSubject.asObservable();
-  // --
+
   isLoading: boolean = false;
   loadingCheckState: string = 'disabled';
 
   initGame(gameMode: GameMode) {
     this._gameMode = gameMode;
-    // on masque le chrono actuel
     this._userLiveChrono = null;
+  }
+
+  get gameMode(): GameMode {
+    return this._gameMode;
   }
 
   onCheck(choiceIndex: number, card: Card) {
     this.loadingCheckState = 'enabled';
-
-    // Étape 1 : on commence par activer le loading
     setTimeout(() => {
       this.apiGameService
         .checkAnswer(this._gameMode, this._gameToken!, choiceIndex)
         .subscribe({
           next: (response) => {
-            
             this._counters.total++;
-            
-            // FIN DE PARTIE ?
+
             if (response.chronoValue) {
-
               this._userLiveChrono = response;
-              // TODO : voir pour ne pas rafraichir le classement systematiquement
               this.refreshRanking$.next();
-
-              // on arrete le chrono
               this.stopSubject.next();
               this.loadingCheckState = 'disabled';
-              // on affiche les erreurs
               this.listErrors = this._listErrors;
-              // ON AFFICHE la modale
               this.openModale$.next();
+<<<<<<< Updated upstream
               
+=======
+>>>>>>> Stashed changes
               return;
             }
 
@@ -101,33 +81,31 @@ export class GameService {
             } else {
               this._counters.errors++;
               this._feedbackClass = 'unCorrectAnswer';
-
-              // on collecte les erreurs
               this._listErrors.push({
                 proposal: card?.proposal,
                 correct: card?.choices[response.correctIndex].label,
                 unCorrect: card?.choices[choiceIndex].label,
               });
+<<<<<<< Updated upstream
               console.log(this._listErrors);
+=======
+>>>>>>> Stashed changes
             }
-            
+
             this.loadingCheckState = 'masquer les boutons';
-            // Étape 2 : laisser apparaître la couleur de feedback
             setTimeout(() => {
               this.isLoading = false;
-              this._card = response.card; // nouvelle carte
-              this._feedbackClass = ''; // reset couleur
+              this._card = response.card;
+              this._feedbackClass = '';
               this.loadingCheckState = 'disabled';
-            }, 400); // délai feedback visible (ajustable)
+            }, 400);
           },
           error: (err) => {
             console.error('Erreur lors du contrôle de la réponse', err);
             this.isLoading = false;
           },
         });
-
-      
-    }, 200); // petite latence avant la requête (pour bien voir le spinner si besoin)
+    }, 200);
   }
 
   // fonction qui va réinitialiser les données d'affichage post-partie
@@ -140,30 +118,41 @@ export class GameService {
   }
 
   StopAndStartGame() {
-    // Si le jeu est déjà lancé => on reset
     if (this._card) {
       this.resetGame();
       return;
     }
 
+<<<<<<< Updated upstream
     this.resetPostGameDatas();
 
     // on démarre le jeu et en retour on obtient une carte
+=======
+    if (!this._gameMode) {
+      throw new Error('Game mode must be initialized before starting the game');
+    }
+
+    this._userLiveChrono = null;
+    this._listErrors = [];
+    this.listErrors = [];
+>>>>>>> Stashed changes
     this.isLoading = true;
-    
-    this.startGame(this._gameMode, () => {
+    this.startGame(() => {
       this.isLoading = false;
-      this.startSubject.next(); // Démarrer le chrono
+      this.startSubject.next();
     });
   }
 
-  // chargement de cartes avec callback loading optionnel
-  startGame(gameMode: GameMode, onLoaded?: () => void) {
-    this.apiGameService.startGame(gameMode).subscribe({
+  startGame(onLoaded?: () => void) {
+    if (!this._gameMode) {
+      throw new Error('Game mode must be initialized before starting the game');
+    }
+
+    console.log('[startGame] Lancement avec', this._gameMode);
+    this.apiGameService.startGame(this._gameMode).subscribe({
       next: (response) => {
         this._card = response.card;
         this._gameToken = response.gameToken;
-        //console.log(this._gameToken);
         if (onLoaded) onLoaded();
       },
       error: (err) => {
@@ -172,13 +161,9 @@ export class GameService {
     });
   }
 
-  resetGame() {
-    // on arrete le chrono
+  resetGame() {    
     this.resetSubject.next();
-
-    // on réinitialise les données du jeu
     this._card = null;
-    
     this._counters = {
       success: 0,
       errors: 0,
@@ -186,7 +171,6 @@ export class GameService {
     };
   }
 
-  // accesseurs d'affichage
   counters() {
     return this._counters;
   }
