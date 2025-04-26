@@ -3,7 +3,7 @@ name: Deploy Angular to GitHub Pages
 on:
   push:
     branches:
-      - main 
+      - main
 
 jobs:
   build:
@@ -52,6 +52,9 @@ jobs:
     needs: build
 
     steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
     - name: Download build folder
       uses: actions/download-artifact@v4
       with:
@@ -63,4 +66,4 @@ jobs:
       with:
         branch: gh-pages
         folder: dist/
-        token: ${{ secrets.GH_TOKEN }}  # Utiliser le secret GH_TOKEN pour authentification
+        token: ${{ secrets.GH_TOKEN }}
