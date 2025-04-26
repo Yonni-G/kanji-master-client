@@ -34,11 +34,18 @@ jobs:
     - name: Build Angular project
       run: npm run build -- --configuration production
 
+    - name: Check if build folder exists
+      run: |
+        if [ ! -d "dist" ]; then
+          echo "Build directory does not exist!"
+          exit 1
+        fi
+
     - name: Upload build folder
       uses: actions/upload-artifact@v4
       with:
         name: dist-folder
-        path: dist/kanji-master-client
+        path: dist/ # Utiliser juste dist/
 
   deploy:
     runs-on: ubuntu-latest
@@ -49,10 +56,10 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: dist-folder
-        path: dist/kanji-master-client
+        path: dist/
 
     - name: Deploy to GitHub Pages
       uses: JamesIves/github-pages-deploy-action@v4
       with:
         branch: gh-pages
-        folder: dist/kanji-master-client
+        folder: dist/ # Utiliser dist ici aussi
