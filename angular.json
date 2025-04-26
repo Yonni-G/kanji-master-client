@@ -15,7 +15,7 @@
           "options": {
             "outputPath": "dist",
             "index": "src/index.html",
-            "baseHref": "/kanji-master/",
+            "baseHref": "/kanji-master-client/",
 
             "browser": "src/main.ts",
             "polyfills": [
