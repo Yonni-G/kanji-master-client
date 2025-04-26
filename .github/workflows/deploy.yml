@@ -1,0 +1,58 @@
+name: Deploy Angular to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    - name: Cache node_modules
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.npm
+          node_modules
+        key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build Angular project
+      run: npm run build -- --configuration production
+
+    - name: Upload build folder
+      uses: actions/upload-artifact@v4
+      with:
+        name: dist-folder
+        path: dist/kanji-master-client # Remplace <nom-du-projet>
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+    - name: Download build folder
+      uses: actions/download-artifact@v4
+      with:
+        name: dist-folder
+        path: dist/kanji-master-client # Remplace <nom-du-projet>
+
+    - name: Deploy to GitHub Pages
+      uses: JamesIves/github-pages-deploy-action@v4
+      with:
+        branch: gh-pages
+        folder: dist/kanji-master-client # Remplace <nom-du-projet>
