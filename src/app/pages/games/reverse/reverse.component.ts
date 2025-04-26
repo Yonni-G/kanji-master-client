@@ -1,8 +1,10 @@
-import { ChangeDetectorRef, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { GameService } from '../../../services/game.service';
 import { Card } from '../../../models/Card';
 import { UpperCasePipe } from '@angular/common';
 import { ChronometerComponent } from "../../../components/games/chronometer/chronometer.component";
+import { ChronoService } from '../../../services/chrono.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { GameMode } from '../../../models/GameMode';
 import { AuthService } from '../../../services/auth.service';
 
@@ -13,10 +15,6 @@ import { AuthService } from '../../../services/auth.service';
   styleUrl: './reverse.component.css',
 })
 export class ReverseComponent {
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
   authService = inject(AuthService);
   gameService = inject(GameService);
 
@@ -34,15 +32,8 @@ export class ReverseComponent {
 
   ngOnInit() {
     this.gameService.initGame(GameMode.REVERSE);
-<<<<<<< Updated upstream
     this.gameService.resetGame();
     this.gameService.resetPostGameDatas();
     this.gameService.refreshRanking$.next();
-=======
-    setTimeout(() => {
-      this.gameService.resetGame();
-      this.gameService.refreshRanking$.next();
-    });
->>>>>>> Stashed changes
   }
 }

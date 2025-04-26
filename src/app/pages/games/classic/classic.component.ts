@@ -13,6 +13,7 @@ import { GameMode } from '../../../models/GameMode';
   styleUrl: './classic.component.css',
 })
 export class ClassicComponent {
+ 
   authService = inject(AuthService);
   gameService = inject(GameService);
 
@@ -30,15 +31,8 @@ export class ClassicComponent {
 
   ngOnInit() {
     this.gameService.initGame(GameMode.CLASSIC);
-<<<<<<< Updated upstream
     this.gameService.resetGame();
     this.gameService.resetPostGameDatas();
     this.gameService.refreshRanking$.next();
-=======
-    setTimeout(() => {
-        this.gameService.resetGame();
-        this.gameService.refreshRanking$.next();
-    });
->>>>>>> Stashed changes
   }
 }
