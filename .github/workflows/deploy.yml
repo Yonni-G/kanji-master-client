@@ -61,6 +61,9 @@ jobs:
         name: dist-folder
         path: dist/
 
+    - name: Create CNAME file
+      run: echo "yonni.com" > dist/browser/CNAME
+
     - name: Deploy to GitHub Pages
       uses: JamesIves/github-pages-deploy-action@v4
       with:
