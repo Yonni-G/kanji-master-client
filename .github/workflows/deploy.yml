@@ -45,7 +45,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: dist-folder
-        path: dist/ # Utiliser juste dist/
+        path: dist/
 
   deploy:
     runs-on: ubuntu-latest
@@ -62,4 +62,5 @@ jobs:
       uses: JamesIves/github-pages-deploy-action@v4
       with:
         branch: gh-pages
-        folder: dist/ # Utiliser dist ici aussi
+        folder: dist/
+        token: ${{ secrets.GH_TOKEN }}  # Utiliser le secret GH_TOKEN pour authentification
