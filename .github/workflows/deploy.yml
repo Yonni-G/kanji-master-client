@@ -52,6 +52,17 @@ jobs:
     needs: build
 
     steps:
+    - name: Setup Git configuration
+      run: |
+        git config --global user.name "Yonni-G"
+        git config --global user.email "yonni4@gmail.com"
+        git remote set-url origin https://github.com/Yonni-G/kanji-master-client.git  # Spécifie explicitement l'URL
+
+    - name: Show git status
+      run: |
+        git status
+        git remote -v
+
     - name: Download build folder
       uses: actions/download-artifact@v4
       with:
@@ -63,4 +74,4 @@ jobs:
       with:
         branch: gh-pages
         folder: dist/
-        token: ${{ secrets.GH_TOKEN }}  # Utiliser le secret GH_TOKEN pour authentification
+        token: ${{ secrets.GH_TOKEN }}
