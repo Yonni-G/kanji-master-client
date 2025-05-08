@@ -6,9 +6,11 @@ import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@a
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { provideJwtHelper } from './services/jwt-helper.provider';
 import { provideAnimations } from '@angular/platform-browser/animations';
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    { provide: LocationStrategy, useClass: HashLocationStrategy },
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideHttpClient(withInterceptorsFromDi()),
@@ -18,6 +20,6 @@ export const appConfig: ApplicationConfig = {
       multi: true,
     },
     provideJwtHelper(),
-    provideAnimations(),
+    provideAnimations()
   ],
 };
